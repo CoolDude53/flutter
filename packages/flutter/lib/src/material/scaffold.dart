@@ -1134,6 +1134,7 @@ class _ScaffoldLayout extends MultiChildLayoutDelegate {
     }
 
     if (hasChild(_ScaffoldSlot.snackBar)) {
+
       final bool hasCustomWidth = snackBarWidth != null && snackBarWidth! < size.width;
       if (snackBarSize == Size.zero) {
         snackBarSize = layoutChild(
@@ -1143,17 +1144,13 @@ class _ScaffoldLayout extends MultiChildLayoutDelegate {
       }
 
       final double snackBarYOffsetBase;
-      if (floatingActionButtonRect.size != Size.zero && isSnackBarFloating) {
-        snackBarYOffsetBase = floatingActionButtonRect.top;
-      } else {
-        // SnackBarBehavior.fixed applies a SafeArea automatically.
-        // SnackBarBehavior.floating does not since the positioning is affected
-        // if there is a FloatingActionButton (see condition above). If there is
-        // no FAB, make sure we account for safe space when the SnackBar is
-        // floating.
-        final double safeYOffsetBase = size.height - minViewPadding.bottom;
-        snackBarYOffsetBase = isSnackBarFloating ? math.min(contentBottom, safeYOffsetBase) : contentBottom;
-      }
+
+      // SnackBarBehavior.fixed applies a SafeArea automatically.
+      // SnackBarBehavior.floating does not since the positioning is affected
+      // if there is a FloatingActionButton (see condition above). If there is
+      // no FAB, make sure we account for safe space when the SnackBar is
+      // floating.
+      snackBarYOffsetBase = contentBottom;
 
       final double xOffset = hasCustomWidth ? (size.width - snackBarWidth!) / 2 : 0.0;
       positionChild(_ScaffoldSlot.snackBar, Offset(xOffset, snackBarYOffsetBase - snackBarSize.height));
