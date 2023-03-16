@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui' show ImageFilter, lerpDouble;
 
@@ -283,7 +284,7 @@ mixin CupertinoRouteTransitionMixin<T> on PageRoute<T> {
         primaryRouteAnimation: animation,
         secondaryRouteAnimation: secondaryAnimation,
         linearTransition: linearTransition,
-        child: _CupertinoBackGestureDetector<T>(
+        child: Platform.isAndroid ? child :_CupertinoBackGestureDetector<T>(
           enabledCallback: () => _isPopGestureEnabled<T>(route),
           onStartPopGesture: () => _startPopGesture<T>(route),
           child: child,
@@ -613,7 +614,7 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     super.initState();
     _recognizer = HorizontalDragGestureRecognizer(debugOwner: this)
       ..onStart = _handleDragStart
-      ..onUpdate = _handleDragUpdate
+      ..onUpdate = Platform.isAndroid ? (_) => _handleDragUpdate : _handleDragUpdate
       ..onEnd = _handleDragEnd
       ..onCancel = _handleDragCancel;
   }
@@ -633,6 +634,9 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
   void _handleDragUpdate(DragUpdateDetails details) {
     assert(mounted);
     assert(_backGestureController != null);
+    if (Platform.isAndroid) {
+      return;
+    }
     _backGestureController!.dragUpdate(_convertToLogical(details.primaryDelta! / context.size!.width));
   }
 
@@ -674,7 +678,9 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     double dragAreaWidth = Directionality.of(context) == TextDirection.ltr ?
                            MediaQuery.paddingOf(context).left :
                            MediaQuery.paddingOf(context).right;
-    dragAreaWidth = max(dragAreaWidth, _kBackGestureWidth);
+    // dragAreaWidth = max(dragAreaWidth, _kBackGestureWidth);
+    dragAreaWidth = MediaQuery.sizeOf(context).width;
+
     return Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
@@ -1273,7 +1279,6 @@ Future<T?> showCupertinoDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-
   return Navigator.of(context, rootNavigator: useRootNavigator).push<T>(CupertinoDialogRoute<T>(
     builder: builder,
     context: context,
