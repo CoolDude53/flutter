@@ -611,7 +611,12 @@ class HorizontalDragGestureRecognizer extends DragGestureRecognizer {
     super.debugOwner,
     super.supportedDevices,
     super.allowedButtonsFilter,
+    this.slop,
   });
+
+  /// The minimum distance over which the pointer must have been dragged for
+  /// being considered by this recognizer.
+  final double? slop;
 
   @override
   bool isFlingGesture(VelocityEstimate estimate, PointerDeviceKind kind) {
@@ -622,7 +627,7 @@ class HorizontalDragGestureRecognizer extends DragGestureRecognizer {
 
   @override
   bool _hasSufficientGlobalDistanceToAccept(PointerDeviceKind pointerDeviceKind, double? deviceTouchSlop) {
-    return _globalDistanceMoved.abs() > computeHitSlop(pointerDeviceKind, gestureSettings);
+    return _globalDistanceMoved.abs() > (slop ?? computeHitSlop(pointerDeviceKind, gestureSettings));
   }
 
   @override

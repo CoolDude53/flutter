@@ -9,6 +9,7 @@ import 'dart:ui' show ImageFilter, lerpDouble;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/src/material/scaffold.dart';
 import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
@@ -612,7 +613,7 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
   @override
   void initState() {
     super.initState();
-    _recognizer = HorizontalDragGestureRecognizer(debugOwner: this)
+    _recognizer = HorizontalDragGestureRecognizer(slop: kPagingTouchSlop, debugOwner: this)
       ..onStart = _handleDragStart
       ..onUpdate = Platform.isAndroid ? (_) => _handleDragUpdate : _handleDragUpdate
       ..onEnd = _handleDragEnd
@@ -729,6 +730,8 @@ class _CupertinoBackGestureController<T> {
   /// The drag gesture has changed by [fractionalDelta]. The total range of the
   /// drag should be 0.0 to 1.0.
   void dragUpdate(double delta) {
+    ScaffoldMessenger.of(navigator.context).hideCurrentSnackBar();
+
     controller.value -= delta;
   }
 

@@ -65,7 +65,7 @@ const double kTouchSlop = 18.0; // Logical pixels
 /// regular drag gesture, which uses kTouchSlop.)
 // TODO(ianh): Create variants of HorizontalDragGestureRecognizer et al for
 // paging, which use this constant.
-const double kPagingTouchSlop = kTouchSlop * 2.0; // Logical pixels
+const double kPagingTouchSlop = kTouchSlop * 2 + 1; // Logical pixels
 
 /// The distance a touch has to travel for the framework to be confident that
 /// the gesture is a panning gesture.
