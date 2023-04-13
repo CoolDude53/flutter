@@ -281,6 +281,10 @@ mixin CupertinoRouteTransitionMixin<T> on PageRoute<T> {
         child: child,
       );
     } else {
+      bool fullScreenSwipeBack = true;
+      if (route.runtimeType == CupertinoPageRoute){
+        fullScreenSwipeBack = (route as CupertinoPageRoute<T>).fullScreenSwipeBack;
+      }
       return CupertinoPageTransition(
         primaryRouteAnimation: animation,
         secondaryRouteAnimation: secondaryAnimation,
@@ -288,6 +292,7 @@ mixin CupertinoRouteTransitionMixin<T> on PageRoute<T> {
         child: Platform.isAndroid ? child :_CupertinoBackGestureDetector<T>(
           enabledCallback: () => _isPopGestureEnabled<T>(route),
           onStartPopGesture: () => _startPopGesture<T>(route),
+          fullScreenSwipeBack: fullScreenSwipeBack,
           child: child,
         ),
       );
@@ -332,6 +337,7 @@ class CupertinoPageRoute<T> extends PageRoute<T> with CupertinoRouteTransitionMi
     required this.builder,
     this.title,
     super.settings,
+    this.fullScreenSwipeBack = true,
     this.maintainState = true,
     super.fullscreenDialog,
     super.allowSnapshotting = true,
@@ -350,6 +356,8 @@ class CupertinoPageRoute<T> extends PageRoute<T> with CupertinoRouteTransitionMi
 
   @override
   final bool maintainState;
+
+  final bool fullScreenSwipeBack;
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
@@ -586,6 +594,7 @@ class _CupertinoBackGestureDetector<T> extends StatefulWidget {
     super.key,
     required this.enabledCallback,
     required this.onStartPopGesture,
+    required this.fullScreenSwipeBack,
     required this.child,
   });
 
@@ -594,6 +603,8 @@ class _CupertinoBackGestureDetector<T> extends StatefulWidget {
   final ValueGetter<bool> enabledCallback;
 
   final ValueGetter<_CupertinoBackGestureController<T>> onStartPopGesture;
+
+  final bool fullScreenSwipeBack;
 
   @override
   _CupertinoBackGestureDetectorState<T> createState() => _CupertinoBackGestureDetectorState<T>();
@@ -609,7 +620,7 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     super.initState();
     _recognizer = HorizontalDragGestureRecognizer(slop: kPagingTouchSlop, debugOwner: this)
       ..onStart = _handleDragStart
-      ..onUpdate = Platform.isAndroid ? (_) => _handleDragUpdate : _handleDragUpdate
+      ..onUpdate = _handleDragUpdate
       ..onEnd = _handleDragEnd
       ..onCancel = _handleDragCancel;
   }
@@ -673,8 +684,12 @@ class _CupertinoBackGestureDetectorState<T> extends State<_CupertinoBackGestureD
     double dragAreaWidth = Directionality.of(context) == TextDirection.ltr ?
                            MediaQuery.paddingOf(context).left :
                            MediaQuery.paddingOf(context).right;
-    // dragAreaWidth = max(dragAreaWidth, _kBackGestureWidth);
-    dragAreaWidth = MediaQuery.sizeOf(context).width;
+
+     if (widget.fullScreenSwipeBack) {
+      dragAreaWidth = MediaQuery.sizeOf(context).width;
+    } else {
+      dragAreaWidth = max(dragAreaWidth, _kBackGestureWidth);
+    }
 
     return Stack(
       fit: StackFit.passthrough,
