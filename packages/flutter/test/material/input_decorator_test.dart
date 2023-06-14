@@ -36,6 +36,7 @@ Widget buildInputDecorator({
   ),
 }) {
   return MaterialApp(
+    theme: ThemeData(useMaterial3: false),
     home: Material(
       child: Builder(
         builder: (BuildContext context) {
@@ -787,6 +788,7 @@ void main() {
         final TextEditingController controller = TextEditingController();
         Widget buildFrame(bool alignLabelWithHint) {
           return MaterialApp(
+            theme: ThemeData(useMaterial3: false),
             home: Material(
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -837,6 +839,7 @@ void main() {
         final TextEditingController controller = TextEditingController();
         Widget buildFrame(bool alignLabelWithHint) {
           return MaterialApp(
+            theme: ThemeData(useMaterial3: false),
             home: Material(
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -888,6 +891,7 @@ void main() {
         final TextEditingController controller = TextEditingController();
         Widget buildFrame(bool alignLabelWithHint) {
           return MaterialApp(
+            theme: ThemeData(useMaterial3: false),
             home: Material(
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -939,6 +943,7 @@ void main() {
         final TextEditingController controller = TextEditingController();
         Widget buildFrame(bool alignLabelWithHint) {
           return MaterialApp(
+            theme: ThemeData(useMaterial3: false),
             home: Material(
               child: Directionality(
                 textDirection: TextDirection.ltr,
@@ -5692,8 +5697,18 @@ void main() {
 
     expect(
       find.text(longStringB),
-      // 133.3 is approximately 100 / 0.75 (_kFinalLabelScale)
-      paints..clipRect(rect: const Rect.fromLTWH(0, 0, 133.0, 16.0)),
+      paints..something((Symbol methodName, List<dynamic> arguments) {
+        if (methodName != #clipRect) {
+          return false;
+        }
+        final Rect clipRect = arguments[0] as Rect;
+        // _kFinalLabelScale = 0.75
+        const double width = bool.hasEnvironment('SKPARAGRAPH_REMOVE_ROUNDING_HACK')
+          ? 100 / 0.75
+          : 133.0;
+        expect(clipRect, rectMoreOrLessEquals(const Rect.fromLTWH(0, 0, width, 16.0), epsilon: 1e-5));
+        return true;
+      }),
     );
   }, skip: isBrowser);  // TODO(yjbanov): https://github.com/flutter/flutter/issues/44020
 
@@ -5704,6 +5719,7 @@ void main() {
     late StateSetter setState;
     await tester.pumpWidget(
       MaterialApp(
+        theme: ThemeData(useMaterial3: false),
         home: StatefulBuilder(
           builder: (BuildContext context, StateSetter setter) {
             setState = setter;

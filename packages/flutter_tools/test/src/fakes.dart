@@ -13,6 +13,7 @@ import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/base/logger.dart';
 import 'package:flutter_tools/src/base/os.dart';
+import 'package:flutter_tools/src/base/version.dart';
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/convert.dart';
 import 'package:flutter_tools/src/features.dart';
@@ -324,7 +325,7 @@ class FakeBotDetector implements BotDetector {
 
 class FakeFlutterVersion implements FlutterVersion {
   FakeFlutterVersion({
-    this.channel = 'unknown',
+    this.branch = 'master',
     this.dartSdkVersion = '12',
     this.devToolsVersion = '2.8.0',
     this.engineRevision = 'abcdefghijklmnopqrstuvwxyz',
@@ -338,6 +339,8 @@ class FakeFlutterVersion implements FlutterVersion {
     this.gitTagVersion = const GitTagVersion.unknown(),
   });
 
+  final String branch;
+
   bool get didFetchTagsAndUpdate => _didFetchTagsAndUpdate;
   bool _didFetchTagsAndUpdate = false;
 
@@ -345,7 +348,12 @@ class FakeFlutterVersion implements FlutterVersion {
   bool _didCheckFlutterVersionFreshness = false;
 
   @override
-  final String channel;
+  String get channel {
+    if (kOfficialChannels.contains(branch) || kObsoleteBranches.containsKey(branch)) {
+      return branch;
+    }
+    return kUserBranch;
+  }
 
   @override
   final String devToolsVersion;
@@ -398,7 +406,10 @@ class FakeFlutterVersion implements FlutterVersion {
 
   @override
   String getBranchName({bool redactUnknownBranches = false}) {
-    return 'master';
+    if (!redactUnknownBranches || kOfficialChannels.contains(branch) || kObsoleteBranches.containsKey(branch)) {
+      return branch;
+    }
+    return kUserBranch;
   }
 
   @override
@@ -609,15 +620,12 @@ class FakeJava extends Fake implements Java {
   FakeJava({
     this.javaHome = '/android-studio/jbr',
     String binary = '/android-studio/jbr/bin/java',
-    JavaVersion? version,
+    Version? version,
     bool canRun = true,
   }): binaryPath = binary,
-      version = version ?? JavaVersion(
-       longText: 'openjdk 19.0.2 2023-01-17',
-       number: '19.0.2',
-      ),
+      version = version ?? const Version.withText(19, 0, 2, 'openjdk 19.0.2 2023-01-17'),
       _environment = <String, String>{
-        if (javaHome != null) 'JAVA_HOME': javaHome,
+        if (javaHome != null) Java.javaHomeEnvironmentVariable: javaHome,
         'PATH': '/android-studio/jbr/bin',
       },
       _canRun = canRun;
@@ -635,7 +643,7 @@ class FakeJava extends Fake implements Java {
   Map<String, String> get environment => _environment;
 
   @override
-  JavaVersion? version;
+  Version? version;
 
   @override
   bool canRun() {
