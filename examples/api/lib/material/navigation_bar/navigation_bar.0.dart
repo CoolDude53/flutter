@@ -36,22 +36,20 @@ class _NavigationExampleState extends State<NavigationExample> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Colors.amber[800],
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            icon: Icon(Icons.explore),
+            label: 'Explore',
           ),
           NavigationDestination(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.commute),
+            label: 'Commute',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.school),
-            icon: Icon(Icons.school_outlined),
-            label: 'School',
+            selectedIcon: Icon(Icons.bookmark),
+            icon: Icon(Icons.bookmark_border),
+            label: 'Saved',
           ),
         ],
       ),

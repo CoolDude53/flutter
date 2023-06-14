@@ -11,73 +11,58 @@ class ActionChipTemplate extends TokenTemplate {
   });
 
   static const String tokenGroup = 'md.comp.assist-chip';
-  static const String flatVariant = '.flat';
-  static const String elevatedVariant = '.elevated';
+  static const String variant = '.flat';
 
   @override
   String generate() => '''
 class _${blockName}DefaultsM3 extends ChipThemeData {
-  _${blockName}DefaultsM3(this.context, this.isEnabled, this._chipVariant)
+  _${blockName}DefaultsM3(this.context, this.isEnabled)
     : super(
+        elevation: ${elevation("$tokenGroup$variant.container")},
         shape: ${shape("$tokenGroup.container")},
         showCheckmark: true,
       );
 
   final BuildContext context;
   final bool isEnabled;
-  final _ChipVariant _chipVariant;
   late final ColorScheme _colors = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
-
-  @override
-  double? get elevation => _chipVariant == _ChipVariant.flat
-    ? ${elevation("$tokenGroup$flatVariant.container")}
-    : isEnabled ? ${elevation("$tokenGroup$elevatedVariant.container")} : ${elevation("$tokenGroup$elevatedVariant.disabled.container")};
-
-  @override
-  double? get pressElevation => ${elevation("$tokenGroup$elevatedVariant.pressed.container")};
 
   @override
   TextStyle? get labelStyle => ${textStyle("$tokenGroup.label-text")};
 
   @override
-  Color? get backgroundColor => ${componentColor("$tokenGroup$flatVariant.container")};
+  Color? get backgroundColor => ${componentColor("$tokenGroup$variant.container")};
 
   @override
-  Color? get shadowColor => _chipVariant == _ChipVariant.flat
-    ? ${colorOrTransparent("$tokenGroup$flatVariant.container.shadow-color")}
-    : ${colorOrTransparent("$tokenGroup$elevatedVariant.container.shadow-color")};
+  Color? get shadowColor => ${colorOrTransparent("$tokenGroup.container.shadow-color")};
 
   @override
   Color? get surfaceTintColor => ${colorOrTransparent("$tokenGroup.container.surface-tint-layer.color")};
 
   @override
-  Color? get selectedColor => ${componentColor("$tokenGroup$flatVariant.selected.container")};
+  Color? get selectedColor => ${componentColor("$tokenGroup$variant.selected.container")};
 
   @override
   Color? get checkmarkColor => ${color("$tokenGroup.with-icon.selected.icon.color")};
 
   @override
-  Color? get disabledColor => _chipVariant == _ChipVariant.flat
-    ? ${componentColor("$tokenGroup$flatVariant.disabled.container")}
-    : ${componentColor("$tokenGroup$elevatedVariant.disabled.container")};
+  Color? get disabledColor => ${componentColor("$tokenGroup$variant.disabled.container")};
 
   @override
   Color? get deleteIconColor => ${color("$tokenGroup.with-icon.selected.icon.color")};
 
   @override
-  BorderSide? get side => _chipVariant == _ChipVariant.flat
-    ? isEnabled
-        ? ${border('$tokenGroup$flatVariant.outline')}
-        : ${border('$tokenGroup$flatVariant.disabled.outline')}
-    : const BorderSide(color: Colors.transparent);
+  BorderSide? get side => isEnabled
+    ? ${border('$tokenGroup$variant.outline')}
+    : ${border('$tokenGroup$variant.disabled.outline')};
 
   @override
   IconThemeData? get iconTheme => IconThemeData(
     color: isEnabled
       ? ${color("$tokenGroup.with-icon.icon.color")}
       : ${color("$tokenGroup.with-icon.disabled.icon.color")},
-    size: ${getToken("$tokenGroup.with-icon.icon.size")},
+    size: ${tokens["$tokenGroup.with-icon.icon.size"]},
   );
 
   @override

@@ -4,7 +4,6 @@
 
 import 'package:file/file.dart';
 import 'package:file_testing/file_testing.dart';
-import 'package:flutter_tools/src/base/io.dart';
 
 import '../src/common.dart';
 import 'test_utils.dart';
@@ -69,7 +68,7 @@ void main() {
     // Build example APK
     final Directory exampleDir = projectRoot.childDirectory('example');
 
-    final ProcessResult result = processManager.runSync(<String>[
+    processManager.runSync(<String>[
       flutterBin,
       ...getLocalEngineArguments(),
       'build',
@@ -78,8 +77,6 @@ void main() {
       'android-arm',
       '--verbose',
     ], workingDirectory: exampleDir.path);
-
-    expect(result, const ProcessResultMatcher());
 
     final String exampleAppApk = fileSystem.path.join(
       exampleDir.path,

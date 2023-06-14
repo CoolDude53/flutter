@@ -2,9 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -159,16 +156,6 @@ class TextFormField extends FormField<String> {
     EditableTextContextMenuBuilder? contextMenuBuilder = _defaultContextMenuBuilder,
     SpellCheckConfiguration? spellCheckConfiguration,
     TextMagnifierConfiguration? magnifierConfiguration,
-    UndoHistoryController? undoController,
-    AppPrivateCommandCallback? onAppPrivateCommand,
-    bool? cursorOpacityAnimates,
-    ui.BoxHeightStyle selectionHeightStyle = ui.BoxHeightStyle.tight,
-    ui.BoxWidthStyle selectionWidthStyle = ui.BoxWidthStyle.tight,
-    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-    ContentInsertionConfiguration? contentInsertionConfiguration,
-    Clip clipBehavior = Clip.hardEdge,
-    bool scribbleEnabled = true,
-    bool canRequestFocus = true,
   }) : assert(initialValue == null || controller == null),
        assert(obscuringCharacter.length == 1),
        assert(maxLines == null || maxLines > 0),
@@ -251,16 +238,6 @@ class TextFormField extends FormField<String> {
                contextMenuBuilder: contextMenuBuilder,
                spellCheckConfiguration: spellCheckConfiguration,
                magnifierConfiguration: magnifierConfiguration,
-               undoController: undoController,
-               onAppPrivateCommand: onAppPrivateCommand,
-               cursorOpacityAnimates: cursorOpacityAnimates,
-               selectionHeightStyle: selectionHeightStyle,
-               selectionWidthStyle: selectionWidthStyle,
-               dragStartBehavior: dragStartBehavior,
-               contentInsertionConfiguration: contentInsertionConfiguration,
-               clipBehavior: clipBehavior,
-               scribbleEnabled: scribbleEnabled,
-               canRequestFocus: canRequestFocus,
              ),
            );
          },

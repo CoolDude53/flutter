@@ -70,40 +70,60 @@ mixin RenderProxyBoxMixin<T extends RenderBox> on RenderBox, RenderObjectWithChi
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    return child?.getMinIntrinsicWidth(height) ?? 0.0;
+    if (child != null) {
+      return child!.getMinIntrinsicWidth(height);
+    }
+    return 0.0;
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    return child?.getMaxIntrinsicWidth(height) ?? 0.0;
+    if (child != null) {
+      return child!.getMaxIntrinsicWidth(height);
+    }
+    return 0.0;
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    return child?.getMinIntrinsicHeight(width) ?? 0.0;
+    if (child != null) {
+      return child!.getMinIntrinsicHeight(width);
+    }
+    return 0.0;
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    return child?.getMaxIntrinsicHeight(width) ?? 0.0;
+    if (child != null) {
+      return child!.getMaxIntrinsicHeight(width);
+    }
+    return 0.0;
   }
 
   @override
   double? computeDistanceToActualBaseline(TextBaseline baseline) {
-    return child?.getDistanceToActualBaseline(baseline)
-        ?? super.computeDistanceToActualBaseline(baseline);
+    if (child != null) {
+      return child!.getDistanceToActualBaseline(baseline);
+    }
+    return super.computeDistanceToActualBaseline(baseline);
   }
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    return child?.getDryLayout(constraints) ?? computeSizeForNoChild(constraints);
+    if (child != null) {
+      return child!.getDryLayout(constraints);
+    }
+    return computeSizeForNoChild(constraints);
   }
 
   @override
   void performLayout() {
-    size = (child?..layout(constraints, parentUsesSize: true))?.size
-        ?? computeSizeForNoChild(constraints);
-    return;
+    if (child != null) {
+      child!.layout(constraints, parentUsesSize: true);
+      size = child!.size;
+    } else {
+      size = computeSizeForNoChild(constraints);
+    }
   }
 
   /// Calculate the size the [RenderProxyBox] would have under the given
@@ -122,11 +142,9 @@ mixin RenderProxyBoxMixin<T extends RenderBox> on RenderBox, RenderObjectWithChi
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    final RenderBox? child = this.child;
-    if (child == null) {
-      return;
+    if (child != null) {
+      context.paintChild(child!, offset);
     }
-    context.paintChild(child, offset);
   }
 }
 
@@ -1999,6 +2017,7 @@ class RenderPhysicalModel extends _RenderPhysicalModelBase<RRect> {
 
     _updateClip();
     final RRect offsetRRect = _clip!.shift(offset);
+    final Rect offsetBounds = offsetRRect.outerRect;
     final Path offsetRRectAsPath = Path()..addRRect(offsetRRect);
     bool paintShadows = true;
     assert(() {
@@ -2019,6 +2038,14 @@ class RenderPhysicalModel extends _RenderPhysicalModelBase<RRect> {
 
     final Canvas canvas = context.canvas;
     if (elevation != 0.0 && paintShadows) {
+      // The drawShadow call doesn't add the region of the shadow to the
+      // picture's bounds, so we draw a hardcoded amount of extra space to
+      // account for the maximum potential area of the shadow.
+      // TODO(jsimmons): remove this when Skia does it for us.
+      canvas.drawRect(
+        offsetBounds.inflate(20.0),
+        _transparentPaint,
+      );
       canvas.drawShadow(
         offsetRRectAsPath,
         shadowColor,

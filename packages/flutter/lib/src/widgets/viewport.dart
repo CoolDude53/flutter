@@ -13,8 +13,7 @@ export 'package:flutter/rendering.dart' show
   AxisDirection,
   GrowthDirection;
 
-/// A widget through which a portion of larger content can be viewed, typically
-/// in combination with a [Scrollable].
+/// A widget that is bigger on the inside.
 ///
 /// [Viewport] is the visual workhorse of the scrolling machinery. It displays a
 /// subset of its children according to its own dimensions and the given

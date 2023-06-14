@@ -161,8 +161,7 @@ void main() {
     // Also shows the previous page's title next to the back button.
     expect(find.widgetWithText(CupertinoButton, 'An iPod'), findsOneWidget);
     // 3 paddings + 1 test font character at font size 34.0.
-    // The epsilon is needed since the text theme has a negative letter spacing thus.
-    expect(tester.getTopLeft(find.text('An iPod')).dx, moreOrLessEquals(8.0 + 4.0 + 34.0 + 6.0, epsilon: 0.5));
+    expect(tester.getTopLeft(find.text('An iPod')).dx, 8.0 + 4.0 + 34.0 + 6.0);
   });
 
   testWidgets('Previous title is correct on first transition frame', (WidgetTester tester) async {
@@ -268,8 +267,7 @@ void main() {
     // from An iPod to Back (since An Internet communicator is too long to
     // fit in the back button).
     expect(find.widgetWithText(CupertinoButton, 'Back'), findsOneWidget);
-    // The epsilon is needed since the text theme has a negative letter spacing thus.
-    expect(tester.getTopLeft(find.text('Back')).dx, moreOrLessEquals(8.0 + 4.0 + 34.0 + 6.0, epsilon: 0.5));
+    expect(tester.getTopLeft(find.text('Back')).dx, 8.0 + 4.0 + 34.0 + 6.0);
   });
 
   testWidgets('Back swipe dismiss interrupted by route push', (WidgetTester tester) async {

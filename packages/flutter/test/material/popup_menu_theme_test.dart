@@ -400,16 +400,15 @@ void main() {
   });
 
   group('Material 2', () {
-    // These tests are only relevant for Material 2. Once Material 2
-    // support is deprecated and the APIs are removed, these tests
-    // can be deleted.
+    // Tests that are only relevant for Material 2. Once ThemeData.useMaterial3
+    // is turned on by default, these tests can be removed.
 
     testWidgets('Passing no PopupMenuThemeData returns defaults', (WidgetTester tester) async {
      final Key popupButtonKey = UniqueKey();
       final Key popupButtonApp = UniqueKey();
       final Key enabledPopupItemKey = UniqueKey();
       final Key disabledPopupItemKey = UniqueKey();
-      final ThemeData theme = ThemeData(useMaterial3: false);
+      final ThemeData theme = ThemeData();
 
       await tester.pumpWidget(MaterialApp(
         theme: theme,
@@ -511,7 +510,7 @@ void main() {
       final Key disabledPopupItemKey = UniqueKey();
 
       await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(popupMenuTheme: popupMenuTheme, useMaterial3: false),
+        theme: ThemeData(popupMenuTheme: popupMenuTheme),
         key: popupButtonApp,
         home: Material(
           child: Column(

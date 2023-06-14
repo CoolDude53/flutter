@@ -18,10 +18,6 @@ import 'theme_data.dart';
 /// that can be used to configure the color properties of most components.
 /// {@endtemplate}
 ///
-/// ### Colors in Material 3
-///
-/// {@macro flutter.material.colors.colorRoles}
-///
 /// The main accent color groups in the scheme are [primary], [secondary],
 /// and [tertiary].
 ///
@@ -48,10 +44,10 @@ import 'theme_data.dart';
 /// contrast ratio with their matching colors of at least 4.5:1 in order to
 /// be readable.
 ///
-/// ### Setting Colors in Flutter
-///
-///{@macro flutter.material.colors.settingColors}
-//
+/// The [Theme] has a color scheme, [ThemeData.colorScheme], which can either be
+/// passed in as a parameter to the constructor or by using 'brightness' and
+/// 'colorSchemeSeed' parameters (which are used to generate a scheme with
+/// [ColorScheme.fromSeed]).
 @immutable
 class ColorScheme with Diagnosticable {
   /// Create a ColorScheme instance from the given colors.

@@ -19,15 +19,16 @@ import '../image_data.dart';
 ByteData testByteData(double scale) => ByteData(8)..setFloat64(0, scale);
 double scaleOf(ByteData data) => data.getFloat64(0);
 
-final Map<Object?, Object?> testManifest = <Object?, Object?>{
-  'assets/image.png' : <Map<String, Object>>[
-    <String, String>{'asset': 'assets/image.png'},
-    <String, Object>{'asset': 'assets/1.5x/image.png', 'dpr': 1.5},
-    <String, Object>{'asset': 'assets/2.0x/image.png', 'dpr': 2.0},
-    <String, Object>{'asset': 'assets/3.0x/image.png', 'dpr': 3.0},
-    <String, Object>{'asset': 'assets/4.0x/image.png', 'dpr': 4.0}
-  ],
-};
+final Map<Object?, Object?> testManifest = json.decode('''
+{
+  "assets/image.png" : [
+    {"asset": "assets/1.5x/image.png", "dpr": 1.5},
+    {"asset": "assets/2.0x/image.png", "dpr": 2.0},
+    {"asset": "assets/3.0x/image.png", "dpr": 3.0},
+    {"asset": "assets/4.0x/image.png", "dpr": 4.0}
+  ]
+}
+''') as Map<Object?, Object?>;
 
 class TestAssetBundle extends CachingAssetBundle {
   TestAssetBundle({ required Map<Object?, Object?> manifest }) {
@@ -40,7 +41,7 @@ class TestAssetBundle extends CachingAssetBundle {
   Future<ByteData> load(String key) {
     late ByteData data;
     switch (key) {
-      case 'AssetManifest.bin':
+      case 'AssetManifest.smcbin':
         data = manifest;
       case 'assets/image.png':
         data = testByteData(1.0);
@@ -302,12 +303,13 @@ void main() {
   // if higher resolution assets are not available we will pick the best
   // available.
   testWidgets('Low-resolution assets', (WidgetTester tester) async {
-    const Map<Object?, Object?> manifest = <Object?, Object?>{
-      'assets/image.png': <Map<String, Object>>[
-        <String, Object>{'asset': 'assets/image.png'},
-        <String, Object>{'asset': 'assets/1.5x/image.png', 'dpr': 1.5},
-      ],
-    };
+    final Map<Object?, Object?> manifest = json.decode('''
+      {
+        "assets/image.png" : [
+          {"asset": "assets/1.5x/image.png", "dpr": 1.5}
+        ]
+      }
+    ''') as Map<Object?, Object?>;
     final AssetBundle bundle = TestAssetBundle(manifest: manifest);
 
     Future<void> testRatio({required double ratio, required double expectedScale}) async {

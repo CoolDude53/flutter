@@ -16,30 +16,11 @@ void main() {
     expect(find.byType(FloatingActionButton), findsOneWidget);
     expect(find.byIcon(Icons.navigation), findsOneWidget);
 
+    final Finder materialButtonFinder = find.byType(RawMaterialButton);
     RawMaterialButton getRawMaterialButtonWidget() {
-      return tester.widget<RawMaterialButton>(find.byType(RawMaterialButton));
+      return tester.widget<RawMaterialButton>(materialButtonFinder);
     }
-
-    Color? getIconColor() {
-      final RichText iconRichText = tester.widget<RichText>(
-        find.descendant(of: find.byIcon(Icons.navigation), matching: find.byType(RichText)),
-      );
-      return iconRichText.text.style?.color;
-    }
-
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle(); // Wait for the animation to finish.
     expect(getRawMaterialButtonWidget().fillColor, Colors.green);
-
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle(); // Wait for the animation to finish.
-    expect(getRawMaterialButtonWidget().fillColor, Colors.green);
-    expect(getIconColor(), Colors.white);
-
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle(); // Wait for the animation to finish.
-    expect(getRawMaterialButtonWidget().fillColor, Colors.green);
-    expect(getIconColor(), Colors.white);
     expect(getRawMaterialButtonWidget().shape, const CircleBorder());
   });
 }

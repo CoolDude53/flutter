@@ -1192,8 +1192,7 @@ abstract class WidgetController {
   /// Forwards the given location to the binding's hitTest logic.
   HitTestResult hitTestOnBinding(Offset location) {
     final HitTestResult result = HitTestResult();
-    // TODO(goderbauer): Support multiple views in flutter_test pointer event handling, https://github.com/flutter/flutter/issues/128281
-    binding.hitTest(result, location); // ignore: deprecated_member_use
+    binding.hitTest(result, location);
     return result;
   }
 
@@ -1314,8 +1313,7 @@ abstract class WidgetController {
     final Offset location = box.localToGlobal(sizeToPoint(box.size));
     if (warnIfMissed) {
       final HitTestResult result = HitTestResult();
-      // TODO(goderbauer): Support multiple views in flutter_test pointer event handling, https://github.com/flutter/flutter/issues/128281
-      binding.hitTest(result, location); // ignore: deprecated_member_use
+      binding.hitTest(result, location);
       bool found = false;
       for (final HitTestEntry entry in result.path) {
         if (entry.target == box) {

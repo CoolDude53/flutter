@@ -21,8 +21,6 @@ const String inputPath = '/input/fonts/MaterialIcons-Regular.otf';
 const String outputPath = '/output/fonts/MaterialIcons-Regular.otf';
 const String relativePath = 'fonts/MaterialIcons-Regular.otf';
 
-final RegExp whitespace = RegExp(r'\s+');
-
 void main() {
   late BufferLogger logger;
   late MemoryFileSystem fileSystem;
@@ -124,7 +122,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     expect(
@@ -156,7 +153,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     expect(
@@ -180,7 +176,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     expect(
@@ -204,7 +199,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     expect(
@@ -233,7 +227,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
     final CompleterIOSink stdinSink = CompleterIOSink();
     addConstFinderInvocation(appDill.path, stdout: validConstFinderResult);
@@ -283,7 +276,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     final CompleterIOSink stdinSink = CompleterIOSink();
@@ -316,7 +308,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     final CompleterIOSink stdinSink = CompleterIOSink();
@@ -350,7 +341,6 @@ void main() {
         processManager: processManager,
         fileSystem: fileSystem,
         artifacts: artifacts,
-        targetPlatform: platform,
       );
 
       addConstFinderInvocation(appDill.path, stdout: constFinderResultWithInvalid);
@@ -370,97 +360,6 @@ void main() {
       expect(processManager, hasNoRemainingExpectations);
     });
   }
-
-  testWithoutContext('Does not add 0x32 for non-web builds', () async {
-    final Environment environment = createEnvironment(<String, String>{
-      kIconTreeShakerFlag: 'true',
-      kBuildMode: 'release',
-    });
-    final File appDill = environment.buildDir.childFile('app.dill')
-      ..createSync(recursive: true);
-
-    final IconTreeShaker iconTreeShaker = IconTreeShaker(
-      environment,
-      fontManifestContent,
-      logger: logger,
-      processManager: processManager,
-      fileSystem: fileSystem,
-      artifacts: artifacts,
-      targetPlatform: TargetPlatform.android_arm64,
-    );
-
-    addConstFinderInvocation(
-      appDill.path,
-      // Does not contain space char
-      stdout: validConstFinderResult,
-    );
-    final CompleterIOSink stdinSink = CompleterIOSink();
-    resetFontSubsetInvocation(stdinSink: stdinSink);
-    expect(processManager.hasRemainingExpectations, isTrue);
-    final File inputFont = fileSystem.file(inputPath)
-        ..writeAsBytesSync(List<int>.filled(2500, 0));
-    fileSystem.file(outputPath)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(List<int>.filled(1200, 0));
-
-    final bool result = await iconTreeShaker.subsetFont(
-      input: inputFont,
-      outputPath: outputPath,
-      relativePath: relativePath,
-    );
-
-    expect(result, isTrue);
-    final List<String> codePoints = stdinSink.getAndClear().trim().split(whitespace);
-    expect(codePoints, isNot(contains('32')));
-
-    expect(processManager, hasNoRemainingExpectations);
-  });
-
-  testWithoutContext('Ensures 0x32 is included for web builds', () async {
-    final Environment environment = createEnvironment(<String, String>{
-      kIconTreeShakerFlag: 'true',
-      kBuildMode: 'release',
-    });
-    final File appDill = environment.buildDir.childFile('app.dill')
-      ..createSync(recursive: true);
-
-    final IconTreeShaker iconTreeShaker = IconTreeShaker(
-      environment,
-      fontManifestContent,
-      logger: logger,
-      processManager: processManager,
-      fileSystem: fileSystem,
-      artifacts: artifacts,
-      targetPlatform: TargetPlatform.web_javascript,
-    );
-
-    addConstFinderInvocation(
-      appDill.path,
-      // Does not contain space char
-      stdout: validConstFinderResult,
-    );
-    final CompleterIOSink stdinSink = CompleterIOSink();
-    resetFontSubsetInvocation(stdinSink: stdinSink);
-    expect(processManager.hasRemainingExpectations, isTrue);
-    final File inputFont = fileSystem.file(inputPath)
-        ..writeAsBytesSync(List<int>.filled(2500, 0));
-    fileSystem.file(outputPath)
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(List<int>.filled(1200, 0));
-
-    final bool result = await iconTreeShaker.subsetFont(
-      input: inputFont,
-      outputPath: outputPath,
-      relativePath: relativePath,
-    );
-
-    expect(result, isTrue);
-    final List<String> codePoints = stdinSink.getAndClear().trim().split(whitespace);
-    expect(codePoints, containsAllInOrder(const <String>['59470', '32']));
-
-    expect(processManager, hasNoRemainingExpectations);
-  });
-
   testWithoutContext('Non-zero font-subset exit code', () async {
     final Environment environment = createEnvironment(<String, String>{
       kIconTreeShakerFlag: 'true',
@@ -477,7 +376,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     final CompleterIOSink stdinSink = CompleterIOSink();
@@ -510,7 +408,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     final CompleterIOSink stdinSink = CompleterIOSink(throwOnAdd: true);
@@ -545,7 +442,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     addConstFinderInvocation(appDill.path, stdout: validConstFinderResult);
@@ -578,7 +474,6 @@ void main() {
       processManager: processManager,
       fileSystem: fileSystem,
       artifacts: artifacts,
-      targetPlatform: TargetPlatform.android,
     );
 
     addConstFinderInvocation(appDill.path, exitCode: -1);

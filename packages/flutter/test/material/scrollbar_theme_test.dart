@@ -35,11 +35,10 @@ void main() {
     final ScrollController scrollController = ScrollController();
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: ScrollConfiguration(
           behavior: const NoScrollbarBehavior(),
           child: Scrollbar(
-            thumbVisibility: true,
+            isAlwaysShown: true,
             showTrackOnHover: true,
             controller: scrollController,
             child: SingleChildScrollView(
@@ -132,7 +131,7 @@ void main() {
       home: ScrollConfiguration(
         behavior: const NoScrollbarBehavior(),
         child: Scrollbar(
-          thumbVisibility: true,
+          isAlwaysShown: true,
           controller: scrollController,
           child: SingleChildScrollView(
             controller: scrollController,
@@ -260,9 +259,9 @@ void main() {
   testWidgets('ScrollbarTheme can disable gestures', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: false, scrollbarTheme: const ScrollbarThemeData(interactive: false)),
+      theme: ThemeData(scrollbarTheme: const ScrollbarThemeData(interactive: false)),
       home: Scrollbar(
-        thumbVisibility: true,
+        isAlwaysShown: true,
         controller: scrollController,
         child: SingleChildScrollView(
           controller: scrollController,
@@ -307,10 +306,10 @@ void main() {
   testWidgets('Scrollbar.interactive takes priority over ScrollbarTheme', (WidgetTester tester) async {
     final ScrollController scrollController = ScrollController();
     await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: false, scrollbarTheme: const ScrollbarThemeData(interactive: false)),
+      theme: ThemeData(scrollbarTheme: const ScrollbarThemeData(interactive: false)),
       home: Scrollbar(
         interactive: true,
-        thumbVisibility: true,
+        isAlwaysShown: true,
         controller: scrollController,
         child: SingleChildScrollView(
           controller: scrollController,
@@ -354,6 +353,7 @@ void main() {
 
   testWidgets('Scrollbar widget properties take priority over theme', (WidgetTester tester) async {
     const double thickness = 4.0;
+    const double hoverThickness = 4.0;
     const bool showTrackOnHover = true;
     const Radius radius = Radius.circular(3.0);
     final ScrollController scrollController = ScrollController();
@@ -367,6 +367,7 @@ void main() {
           behavior: const NoScrollbarBehavior(),
           child: Scrollbar(
             thickness: thickness,
+            hoverThickness: hoverThickness,
             thumbVisibility: true,
             showTrackOnHover: showTrackOnHover,
             radius: radius,
@@ -425,18 +426,19 @@ void main() {
       find.byType(Scrollbar),
       paints
         ..rect(
-          rect: const Rect.fromLTRB(784.0, 0.0, 800.0, 600.0),
+          rect: const Rect.fromLTRB(792.0, 0.0, 800.0, 600.0),
           color: const Color(0x08000000),
         )
         ..line(
-          p1: const Offset(784.0, 0.0),
-          p2: const Offset(784.0, 600.0),
+          p1: const Offset(792.0, 0.0),
+          p2: const Offset(792.0, 600.0),
           strokeWidth: 1.0,
           color: const Color(0x1a000000),
         )
         ..rrect(
           rrect: RRect.fromRectAndRadius(
-            const Rect.fromLTRB(786.0, 10.0, 798.0, 100.0),
+            // Scrollbar thumb is larger
+            const Rect.fromLTRB(794.0, 10.0, 798.0, 100.0),
             const Radius.circular(3.0),
           ),
           // Hover color
@@ -459,7 +461,7 @@ void main() {
         home: ScrollConfiguration(
           behavior: const NoScrollbarBehavior(),
           child: Scrollbar(
-            thumbVisibility: true,
+            isAlwaysShown: true,
             showTrackOnHover: true,
             controller: scrollController,
             child: SingleChildScrollView(
@@ -626,7 +628,7 @@ void main() {
     }
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false).copyWith(
+        theme: ThemeData().copyWith(
           scrollbarTheme: _scrollbarTheme(
             trackVisibility: MaterialStateProperty.resolveWith(getTrackVisibility),
           ),
@@ -634,7 +636,7 @@ void main() {
         home: ScrollConfiguration(
           behavior: const NoScrollbarBehavior(),
           child: Scrollbar(
-            thumbVisibility: true,
+            isAlwaysShown: true,
             showTrackOnHover: true,
             controller: scrollController,
             child: SingleChildScrollView(

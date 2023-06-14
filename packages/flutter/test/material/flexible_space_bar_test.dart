@@ -8,7 +8,6 @@
 library;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../widgets/semantics_tester.dart';
@@ -81,7 +80,6 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: CustomScrollView(
             key: dragTarget,
@@ -161,10 +159,7 @@ void main() {
       ),
     );
 
-    final dynamic backgroundOpacity = tester.firstWidget(
-      find.byWidgetPredicate((Widget widget) => widget.runtimeType.toString() == '_FlexibleSpaceHeaderOpacity'));
-    // accessing private type member.
-    // ignore: avoid_dynamic_calls
+    final Opacity backgroundOpacity = tester.firstWidget(find.byType(Opacity));
     expect(backgroundOpacity.opacity, 1.0);
   });
 
@@ -173,7 +168,6 @@ void main() {
     const double expandedHeight = 200;
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
@@ -415,6 +409,8 @@ void main() {
                               label: 'Item 6',
                               textDirection: TextDirection.ltr,
                             ),
+
+
                           ],
                         ),
                       ],
@@ -440,7 +436,6 @@ void main() {
     late double width;
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: Builder(
             builder: (BuildContext context) {
@@ -470,16 +465,18 @@ void main() {
       ),
     );
 
-    final double textWidth = const bool.hasEnvironment('SKPARAGRAPH_REMOVE_ROUNDING_HACK')
-      ? width
-      : (width / 1.5).floorToDouble() * 1.5;
     // The title is scaled and transformed to be 1.5 times bigger, when the
     // FlexibleSpaceBar is fully expanded, thus we expect the width to be
     // 1.5 times smaller than the full width. The height of the text is the same
     // as the font size, with 10 dps bottom margin.
     expect(
       tester.getRect(find.byType(Text)),
-      rectMoreOrLessEquals(Rect.fromLTRB(0, height - titleFontSize - 10, textWidth, height), epsilon: 0.0001),
+      Rect.fromLTRB(
+        0,
+        height - titleFontSize - 10,
+        (width / 1.5).floorToDouble() * 1.5,
+        height,
+      ),
     );
   });
 
@@ -489,7 +486,6 @@ void main() {
     const double expandedTitleScale = 3.0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
@@ -541,16 +537,18 @@ void main() {
     // bottom edge.
     const double bottomMargin = titleFontSize * (expandedTitleScale - 1);
 
-    final double textWidth = const bool.hasEnvironment('SKPARAGRAPH_REMOVE_ROUNDING_HACK')
-      ? collapsedWidth
-      : (collapsedWidth / 3).floorToDouble() * 3;
     // The title is scaled and transformed to be 3 times bigger, when the
     // FlexibleSpaceBar is fully expanded, thus we expect the width to be
     // 3 times smaller than the full width. The height of the text is the same
     // as the font size, with 40 dps bottom margin to maintain its bottom position.
     expect(
       tester.getRect(title),
-      rectMoreOrLessEquals(Rect.fromLTRB(0, height - titleFontSize - bottomMargin, textWidth, height), epsilon: 0.0001),
+      Rect.fromLTRB(
+        0,
+        height - titleFontSize - bottomMargin,
+        (collapsedWidth / 3).floorToDouble() * 3,
+        height,
+      ),
     );
   });
 
@@ -559,7 +557,6 @@ void main() {
     const double height = 300.0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
@@ -620,7 +617,6 @@ void main() {
     const double expandedTitleScale = 3.0;
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: CustomScrollView(
             slivers: <Widget>[
@@ -680,7 +676,7 @@ void main() {
   testWidgets('FlexibleSpaceBar test titlePadding defaults', (WidgetTester tester) async {
     Widget buildFrame(TargetPlatform platform, bool? centerTitle) {
       return MaterialApp(
-        theme: ThemeData(platform: platform, useMaterial3: false),
+        theme: ThemeData(platform: platform),
         home: Scaffold(
           appBar: AppBar(
             flexibleSpace: FlexibleSpaceBar(
@@ -730,7 +726,7 @@ void main() {
   testWidgets('FlexibleSpaceBar test titlePadding override', (WidgetTester tester) async {
     Widget buildFrame(TargetPlatform platform, bool? centerTitle) {
       return MaterialApp(
-        theme: ThemeData(platform: platform, useMaterial3: false),
+        theme: ThemeData(platform: platform),
         home: Scaffold(
           appBar: AppBar(
             flexibleSpace: FlexibleSpaceBar(
@@ -794,22 +790,6 @@ void main() {
     await tester.pumpWidget(buildFrame(TargetPlatform.linux, true));
     expect(getTitleBottomLeft(), const Offset(390.0, 0.0));
   });
-
-  testWidgets('FlexibleSpaceBar rebuilds when scrolling.', (WidgetTester tester) async {
-    await tester.pumpWidget(const MaterialApp(
-      home: SubCategoryScreenView(),
-    ));
-
-    expect(RenderRebuildTracker.count, 1);
-
-    // We drag up to fully collapse the space bar.
-    for (int i = 0; i < 20; i++) {
-      await tester.drag(find.byKey(SubCategoryScreenView.scrollKey), const Offset(0, -50.0));
-      await tester.pumpAndSettle();
-    }
-
-    expect(RenderRebuildTracker.count, greaterThan(1));
-  });
 }
 
 class TestDelegate extends SliverPersistentHeaderDelegate {
@@ -833,84 +813,4 @@ class TestDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(TestDelegate oldDelegate) => false;
-}
-
-class RebuildTracker extends SingleChildRenderObjectWidget {
-  const RebuildTracker({super.key});
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return RenderRebuildTracker();
-  }
-}
-
-class RenderRebuildTracker extends RenderProxyBox {
-  static int count = 0;
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    count++;
-    super.paint(context, offset);
-  }
-}
-
-class SubCategoryScreenView extends StatefulWidget {
-  const SubCategoryScreenView({
-    super.key,
-  });
-
-  static const Key scrollKey = Key('orange box');
-
-  @override
-  State<SubCategoryScreenView> createState() => _SubCategoryScreenViewState();
-}
-
-class _SubCategoryScreenViewState extends State<SubCategoryScreenView>
-    with TickerProviderStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Test'),
-      ),
-      body: CustomScrollView(
-        key: SubCategoryScreenView.scrollKey,
-        slivers: <Widget>[
-          SliverAppBar(
-            leading: const SizedBox(),
-            expandedHeight: MediaQuery.of(context).size.width / 1.7,
-            collapsedHeight: 0,
-            toolbarHeight: 0,
-            titleSpacing: 0,
-            leadingWidth: 0,
-            flexibleSpace: const FlexibleSpaceBar(
-              background: AspectRatio(
-                aspectRatio: 1.7,
-                child: RebuildTracker(),
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-          SliverToBoxAdapter(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 300,
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  color: Colors.amber,
-                  child: Center(child: Text('$index')),
-                );
-              },
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-        ],
-      ),
-    );
-  }
 }

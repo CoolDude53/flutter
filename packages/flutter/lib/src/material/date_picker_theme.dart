@@ -67,7 +67,6 @@ class DatePickerThemeData with Diagnosticable {
     this.rangePickerHeaderHelpStyle,
     this.rangeSelectionBackgroundColor,
     this.rangeSelectionOverlayColor,
-    this.dividerColor,
   });
 
   /// Overrides the default value of [Dialog.backgroundColor].
@@ -283,11 +282,6 @@ class DatePickerThemeData with Diagnosticable {
   /// [DateRangePickerDialog] is focused, hovered, or pressed.
   final MaterialStateProperty<Color?>? rangeSelectionOverlayColor;
 
-  /// Overrides the default color used to paint the horizontal divider
-  /// below the header text when dialog is in in portrait orientation
-  /// and vertical divider when the dialog is in landscape orientation.
-  final Color? dividerColor;
-
   /// Creates a copy of this object with the given fields replaced with the
   /// new values.
   DatePickerThemeData copyWith({
@@ -323,7 +317,6 @@ class DatePickerThemeData with Diagnosticable {
     TextStyle? rangePickerHeaderHelpStyle,
     Color? rangeSelectionBackgroundColor,
     MaterialStateProperty<Color?>? rangeSelectionOverlayColor,
-    Color? dividerColor,
   }) {
     return DatePickerThemeData(
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -358,7 +351,6 @@ class DatePickerThemeData with Diagnosticable {
       rangePickerHeaderHelpStyle: rangePickerHeaderHelpStyle ?? this.rangePickerHeaderHelpStyle,
       rangeSelectionBackgroundColor: rangeSelectionBackgroundColor ?? this.rangeSelectionBackgroundColor,
       rangeSelectionOverlayColor: rangeSelectionOverlayColor ?? this.rangeSelectionOverlayColor,
-      dividerColor: dividerColor ?? this.dividerColor,
     );
   }
 
@@ -400,7 +392,6 @@ class DatePickerThemeData with Diagnosticable {
       rangePickerHeaderHelpStyle: TextStyle.lerp(a?.rangePickerHeaderHelpStyle, b?.rangePickerHeaderHelpStyle, t),
       rangeSelectionBackgroundColor: Color.lerp(a?.rangeSelectionBackgroundColor, b?.rangeSelectionBackgroundColor, t),
       rangeSelectionOverlayColor: MaterialStateProperty.lerp<Color?>(a?.rangeSelectionOverlayColor, b?.rangeSelectionOverlayColor, t, Color.lerp),
-      dividerColor: Color.lerp(a?.dividerColor, b?.dividerColor, t),
     );
   }
 
@@ -448,7 +439,6 @@ class DatePickerThemeData with Diagnosticable {
     rangePickerHeaderHelpStyle,
     rangeSelectionBackgroundColor,
     rangeSelectionOverlayColor,
-    dividerColor,
   ]);
 
   @override
@@ -488,8 +478,7 @@ class DatePickerThemeData with Diagnosticable {
       && other.rangePickerHeaderHeadlineStyle == rangePickerHeaderHeadlineStyle
       && other.rangePickerHeaderHelpStyle == rangePickerHeaderHelpStyle
       && other.rangeSelectionBackgroundColor == rangeSelectionBackgroundColor
-      && other.rangeSelectionOverlayColor == rangeSelectionOverlayColor
-      && other.dividerColor == dividerColor;
+      && other.rangeSelectionOverlayColor == rangeSelectionOverlayColor;
   }
 
   @override
@@ -527,7 +516,6 @@ class DatePickerThemeData with Diagnosticable {
     properties.add(DiagnosticsProperty<TextStyle>('rangePickerHeaderHelpStyle', rangePickerHeaderHelpStyle, defaultValue: null));
     properties.add(ColorProperty('rangeSelectionBackgroundColor', rangeSelectionBackgroundColor, defaultValue: null));
     properties.add(DiagnosticsProperty<MaterialStateProperty<Color?>>('rangeSelectionOverlayColor', rangeSelectionOverlayColor, defaultValue: null));
-    properties.add(ColorProperty('dividerColor', dividerColor, defaultValue: null));
   }
 }
 
@@ -788,6 +776,8 @@ class _DatePickerDefaultsM2 extends DatePickerThemeData {
 // "END GENERATED" comments are generated from data in the Material
 // Design token database by the script:
 //   dev/tools/gen_defaults/bin/gen_defaults.dart.
+
+// Token database version: v0_162
 
 class _DatePickerDefaultsM3 extends DatePickerThemeData {
   _DatePickerDefaultsM3(this.context)

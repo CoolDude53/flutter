@@ -282,12 +282,14 @@ void main() {
   });
 
   group('Material 2', () {
-    // These tests are only relevant for Material 2. Once Material 2
-    // support is deprecated and the APIs are removed, these tests
-    // can be deleted.
+    // Tests that are only relevant for Material 2. Once ThemeData.useMaterial3
+    // is turned on by default, these tests can be removed.
 
     testWidgets('CircleAvatar default colors with light theme', (WidgetTester tester) async {
-      final ThemeData theme = ThemeData(useMaterial3: false, primaryColor: Colors.grey.shade100);
+      final ThemeData theme = ThemeData(
+        primaryColor: Colors.grey.shade100,
+        primaryColorBrightness: Brightness.light,
+      );
       await tester.pumpWidget(
         wrap(
           child: Theme(
@@ -309,7 +311,10 @@ void main() {
     });
 
     testWidgets('CircleAvatar default colors with dark theme', (WidgetTester tester) async {
-      final ThemeData theme = ThemeData(useMaterial3: false, primaryColor: Colors.grey.shade800);
+      final ThemeData theme = ThemeData(
+        primaryColor: Colors.grey.shade800,
+        primaryColorBrightness: Brightness.dark,
+      );
       await tester.pumpWidget(
         wrap(
           child: Theme(
@@ -337,9 +342,7 @@ Widget wrap({ required Widget child }) {
     textDirection: TextDirection.ltr,
     child: MediaQuery(
       data: const MediaQueryData(),
-      child: MaterialApp(
-        theme: ThemeData(useMaterial3: false),
-        home: Center(child: child)),
+      child: Center(child: child),
     ),
   );
 }

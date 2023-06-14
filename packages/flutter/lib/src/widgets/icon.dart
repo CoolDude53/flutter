@@ -280,7 +280,6 @@ class Icon extends StatelessWidget {
           fontSize: iconSize,
           fontFamily: icon!.fontFamily,
           package: icon!.fontPackage,
-          fontFamilyFallback: icon!.fontFamilyFallback,
           shadows: iconShadows,
         ),
       ),

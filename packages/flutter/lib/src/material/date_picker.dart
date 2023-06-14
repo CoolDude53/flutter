@@ -13,6 +13,7 @@ import 'back_button.dart';
 import 'button_style.dart';
 import 'calendar_date_picker.dart';
 import 'color_scheme.dart';
+import 'colors.dart';
 import 'date.dart';
 import 'date_picker_theme.dart';
 import 'debug.dart';
@@ -674,7 +675,7 @@ class _DatePickerDialogState extends State<DatePickerDialog> with RestorationMix
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     header,
-                    if (useMaterial3) Divider(height: 0, color: datePickerTheme.dividerColor),
+                    if (useMaterial3) const Divider(),
                     Expanded(child: picker),
                     actions,
                   ],
@@ -685,7 +686,7 @@ class _DatePickerDialogState extends State<DatePickerDialog> with RestorationMix
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     header,
-                    if (useMaterial3) VerticalDivider(width: 0, color: datePickerTheme.dividerColor),
+                    if (useMaterial3) const VerticalDivider(),
                     Flexible(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -849,7 +850,6 @@ class _DatePickerHeader extends StatelessWidget {
               padding: const EdgeInsetsDirectional.only(
                 start: 24,
                 end: 12,
-                bottom: 12,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1587,7 +1587,6 @@ class _CalendarRangePickerDialog extends StatelessWidget {
     final DatePickerThemeData themeData = DatePickerTheme.of(context);
     final DatePickerThemeData defaults = DatePickerTheme.defaults(context);
     final Color? dialogBackground = themeData.rangePickerBackgroundColor ?? defaults.rangePickerBackgroundColor;
-    final Color? headerBackground = themeData.rangePickerHeaderBackgroundColor ?? defaults.rangePickerHeaderBackgroundColor;
     final Color? headerForeground = themeData.rangePickerHeaderForegroundColor ?? defaults.rangePickerHeaderForegroundColor;
     final Color? headerDisabledForeground = headerForeground?.withOpacity(0.38);
     final TextStyle? headlineStyle = themeData.rangePickerHeaderHeadlineStyle ?? defaults.rangePickerHeaderHeadlineStyle;
@@ -1616,7 +1615,7 @@ class _CalendarRangePickerDialog extends StatelessWidget {
           actionsIconTheme: iconTheme,
           elevation: useMaterial3 ? 0 : null,
           scrolledUnderElevation: useMaterial3 ? 0 : null,
-          backgroundColor: useMaterial3 ? headerBackground : null,
+          backgroundColor: useMaterial3 ? Colors.transparent : null,
           leading: CloseButton(
             onPressed: onCancel,
           ),

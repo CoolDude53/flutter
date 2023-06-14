@@ -144,7 +144,8 @@
 /// ```
 ///
 /// ```dart
-/// import 'dart:io'; // error (unused_import)/// final Widget p = Placeholder(); // error (undefined_class, undefined_function)
+/// import 'dart:io'; // error (unused_import)
+/// final Widget p = Placeholder(); // error (undefined_class, undefined_function, avoid_dynamic_calls)
 /// ```
 ///
 /// ```dart

@@ -36,7 +36,8 @@ void main() {
       '--debug',
     ], workingDirectory: tempDir.path);
 
-    expect(result, const ProcessResultMatcher(stdoutPattern: 'app-debug.apk'));
+    expect(result.exitCode, 0);
+    expect(result.stdout.toString(), contains('app-debug.apk'));
   });
 
   testWithoutContext('simple build apk without FlutterMultiDexApplication fails', () async {
@@ -51,8 +52,8 @@ void main() {
       '--debug',
     ], workingDirectory: tempDir.path);
 
-    expect(result, const ProcessResultMatcher(exitCode: 1));
     expect(result.stderr.toString(), contains('Cannot fit requested classes in a single dex file'));
     expect(result.stderr.toString(), contains('The number of method references in a .dex file cannot exceed 64K.'));
+    expect(result.exitCode, 1);
   });
 }

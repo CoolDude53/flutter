@@ -14,8 +14,6 @@ import 'text_theme.dart';
 import 'theme.dart';
 import 'theme_data.dart';
 
-enum _ChipVariant { flat, elevated }
-
 /// A Material Design choice chip.
 ///
 /// [ChoiceChip]s represent a single choice from a set. Choice chips contain
@@ -91,46 +89,7 @@ class ChoiceChip extends StatelessWidget
     this.checkmarkColor,
     this.avatarBorder = const CircleBorder(),
   }) : assert(pressElevation == null || pressElevation >= 0.0),
-       assert(elevation == null || elevation >= 0.0),
-       _chipVariant = _ChipVariant.flat;
-
-  /// Create an elevated chip that acts like a radio button.
-  ///
-  /// The [label], [selected], [autofocus], and [clipBehavior] arguments must
-  /// not be null. The [pressElevation] and [elevation] must be null or
-  /// non-negative. Typically, [pressElevation] is greater than [elevation].
-  const ChoiceChip.elevated({
-    super.key,
-    this.avatar,
-    required this.label,
-    this.labelStyle,
-    this.labelPadding,
-    this.onSelected,
-    this.pressElevation,
-    required this.selected,
-    this.selectedColor,
-    this.disabledColor,
-    this.tooltip,
-    this.side,
-    this.shape,
-    this.clipBehavior = Clip.none,
-    this.focusNode,
-    this.autofocus = false,
-    this.backgroundColor,
-    this.padding,
-    this.visualDensity,
-    this.materialTapTargetSize,
-    this.elevation,
-    this.shadowColor,
-    this.surfaceTintColor,
-    this.iconTheme,
-    this.selectedShadowColor,
-    this.showCheckmark,
-    this.checkmarkColor,
-    this.avatarBorder = const CircleBorder(),
-  }) : assert(pressElevation == null || pressElevation >= 0.0),
-       assert(elevation == null || elevation >= 0.0),
-       _chipVariant = _ChipVariant.elevated;
+       assert(elevation == null || elevation >= 0.0);
 
   @override
   final Widget? avatar;
@@ -190,14 +149,12 @@ class ChoiceChip extends StatelessWidget
   @override
   bool get isEnabled => onSelected != null;
 
-  final _ChipVariant _chipVariant;
-
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
     final ChipThemeData chipTheme = ChipTheme.of(context);
     final ChipThemeData? defaults = Theme.of(context).useMaterial3
-      ? _ChoiceChipDefaultsM3(context, isEnabled, selected, _chipVariant)
+      ? _ChoiceChipDefaultsM3(context, isEnabled, selected)
       : null;
     return RawChip(
       defaultProperties: defaults,
@@ -240,13 +197,12 @@ class ChoiceChip extends StatelessWidget
 // Design token database by the script:
 //   dev/tools/gen_defaults/bin/gen_defaults.dart.
 
+// Token database version: v0_162
+
 class _ChoiceChipDefaultsM3 extends ChipThemeData {
-  _ChoiceChipDefaultsM3(
-    this.context,
-    this.isEnabled,
-    this.isSelected,
-    this._chipVariant,
-  ) : super(
+  _ChoiceChipDefaultsM3(this.context, this.isEnabled, this.isSelected)
+    : super(
+        elevation: 0.0,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
         showCheckmark: true,
       );
@@ -254,17 +210,8 @@ class _ChoiceChipDefaultsM3 extends ChipThemeData {
   final BuildContext context;
   final bool isEnabled;
   final bool isSelected;
-  final _ChipVariant _chipVariant;
   late final ColorScheme _colors = Theme.of(context).colorScheme;
   late final TextTheme _textTheme = Theme.of(context).textTheme;
-
-  @override
-  double? get elevation => _chipVariant == _ChipVariant.flat
-    ? 0.0
-    : isEnabled ? 1.0 : 0.0;
-
-  @override
-  double? get pressElevation => 1.0;
 
   @override
   TextStyle? get labelStyle => _textTheme.labelLarge;
@@ -273,37 +220,29 @@ class _ChoiceChipDefaultsM3 extends ChipThemeData {
   Color? get backgroundColor => null;
 
   @override
-  Color? get shadowColor => _chipVariant == _ChipVariant.flat
-    ? Colors.transparent
-    : _colors.shadow;
+  Color? get shadowColor => Colors.transparent;
 
   @override
   Color? get surfaceTintColor => _colors.surfaceTint;
 
   @override
-  Color? get selectedColor => _chipVariant == _ChipVariant.flat
-    ? isEnabled
-      ? _colors.secondaryContainer
-      : _colors.onSurface.withOpacity(0.12)
-    : isEnabled
-      ? _colors.secondaryContainer
-      : _colors.onSurface.withOpacity(0.12);
+  Color? get selectedColor => isEnabled
+    ? _colors.secondaryContainer
+    : _colors.onSurface.withOpacity(0.12);
 
   @override
   Color? get checkmarkColor => _colors.onSecondaryContainer;
 
   @override
-  Color? get disabledColor => _chipVariant == _ChipVariant.flat
-    ? isSelected
-      ? _colors.onSurface.withOpacity(0.12)
-      : null
-    : _colors.onSurface.withOpacity(0.12);
+  Color? get disabledColor => isSelected
+   ? _colors.onSurface.withOpacity(0.12)
+   : null;
 
   @override
   Color? get deleteIconColor => _colors.onSecondaryContainer;
 
   @override
-  BorderSide? get side => _chipVariant == _ChipVariant.flat && !isSelected
+  BorderSide? get side => !isSelected
     ? isEnabled
       ? BorderSide(color: _colors.outline)
       : BorderSide(color: _colors.onSurface.withOpacity(0.12))

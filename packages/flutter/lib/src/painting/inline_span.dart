@@ -395,6 +395,9 @@ abstract class InlineSpan extends DiagnosticableTree {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.defaultDiagnosticsTreeStyle = DiagnosticsTreeStyle.whitespace;
-    style?.debugFillProperties(properties);
+
+    if (style != null) {
+      style!.debugFillProperties(properties);
+    }
   }
 }

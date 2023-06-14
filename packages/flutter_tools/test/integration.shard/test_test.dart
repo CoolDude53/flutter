@@ -32,27 +32,21 @@ final List<String> integrationTestExtraArgs = <String>['-d', 'flutter-tester'];
 
 void main() {
   setUpAll(() async {
-    expect(
-      await processManager.run(
-        <String>[
-          flutterBin,
-          'pub',
-          'get',
-        ],
-        workingDirectory: flutterTestDirectory
-      ),
-      const ProcessResultMatcher(),
+    await processManager.run(
+      <String>[
+        flutterBin,
+        'pub',
+        'get',
+      ],
+      workingDirectory: flutterTestDirectory
     );
-    expect(
-      await processManager.run(
-        <String>[
-          flutterBin,
-          'pub',
-          'get',
-        ],
-        workingDirectory: missingDependencyDirectory
-      ),
-      const ProcessResultMatcher(),
+    await processManager.run(
+      <String>[
+        flutterBin,
+        'pub',
+        'get',
+      ],
+      workingDirectory: missingDependencyDirectory
     );
   });
 
@@ -118,109 +112,71 @@ void main() {
   });
 
   testWithoutContext('flutter test should run a test when its name matches a regexp', () async {
-    final ProcessResult result = await _runFlutterTest(
-      'filtering',
-      automatedTestsDirectory,
-      flutterTestDirectory,
-      extraArguments: const <String>['--name', 'inc.*de'],
-    );
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    final ProcessResult result = await _runFlutterTest('filtering', automatedTestsDirectory, flutterTestDirectory,
+      extraArguments: const <String>['--name', 'inc.*de']);
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should run a test when its name contains a string', () async {
-    final ProcessResult result = await _runFlutterTest(
-      'filtering',
-      automatedTestsDirectory,
-      flutterTestDirectory,
-      extraArguments: const <String>['--plain-name', 'include'],
-    );
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    final ProcessResult result = await _runFlutterTest('filtering', automatedTestsDirectory, flutterTestDirectory,
+      extraArguments: const <String>['--plain-name', 'include']);
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should run a test with a given tag', () async {
-    final ProcessResult result = await _runFlutterTest(
-      'filtering_tag',
-      automatedTestsDirectory,
-      flutterTestDirectory,
-      extraArguments: const <String>['--tags', 'include-tag'],
-    );
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    final ProcessResult result = await _runFlutterTest('filtering_tag', automatedTestsDirectory, flutterTestDirectory,
+        extraArguments: const <String>['--tags', 'include-tag']);
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should not run a test with excluded tag', () async {
     final ProcessResult result = await _runFlutterTest('filtering_tag', automatedTestsDirectory, flutterTestDirectory,
         extraArguments: const <String>['--exclude-tags', 'exclude-tag']);
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should run all tests when tags are unspecified', () async {
     final ProcessResult result = await _runFlutterTest('filtering_tag', automatedTestsDirectory, flutterTestDirectory);
-    expect(
-      result,
-      ProcessResultMatcher(
-        exitCode: 1,
-        stdoutPattern: RegExp(r'\+\d+ -1: Some tests failed\.'),
-      ),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+ -1: Some tests failed\.')));
+    expect(result.exitCode, 1);
   });
 
   testWithoutContext('flutter test should run a widgetTest with a given tag', () async {
     final ProcessResult result = await _runFlutterTest('filtering_tag_widget', automatedTestsDirectory, flutterTestDirectory,
         extraArguments: const <String>['--tags', 'include-tag']);
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should not run a widgetTest with excluded tag', () async {
     final ProcessResult result = await _runFlutterTest('filtering_tag_widget', automatedTestsDirectory, flutterTestDirectory,
         extraArguments: const <String>['--exclude-tags', 'exclude-tag']);
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should run all widgetTest when tags are unspecified', () async {
     final ProcessResult result = await _runFlutterTest('filtering_tag_widget', automatedTestsDirectory, flutterTestDirectory);
-    expect(
-      result,
-      ProcessResultMatcher(
-        exitCode: 1,
-        stdoutPattern: RegExp(r'\+\d+ -1: Some tests failed\.'),
-      ),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+ -1: Some tests failed\.')));
+    expect(result.exitCode, 1);
   });
 
   testWithoutContext('flutter test should run a test with an exact name in URI format', () async {
     final ProcessResult result = await _runFlutterTest('uri_format', automatedTestsDirectory, flutterTestDirectory,
       query: 'full-name=exactTestName');
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should run a test by line number in URI format', () async {
     final ProcessResult result = await _runFlutterTest('uri_format', automatedTestsDirectory, flutterTestDirectory,
       query: 'line=11');
-    expect(
-      result,
-      ProcessResultMatcher(stdoutPattern: RegExp(r'\+\d+: All tests passed!')),
-    );
+    expect(result.stdout, contains(RegExp(r'\+\d+: All tests passed!')));
+    expect(result.exitCode, 0);
   });
 
   testWithoutContext('flutter test should test runs to completion', () async {
@@ -258,8 +214,8 @@ void main() {
   });
 
   testWithoutContext('flutter test should respect --serve-observatory', () async {
-    Process? process;
-    StreamSubscription<String>? sub;
+    late final Process process;
+    late final StreamSubscription<String> sub;
     try {
       process = await _runFlutterTestConcurrent('trivial', automatedTestsDirectory, flutterTestDirectory,
         extraArguments: const <String>['--start-paused', '--serve-observatory']);
@@ -275,16 +231,16 @@ void main() {
       final HttpClientRequest request = await client.getUrl(vmServiceUri);
       final HttpClientResponse response = await request.close();
       final String content = await response.transform(utf8.decoder).join();
-      expect(content, contains('Dart VM Observatory'));
+      expect(content.contains('Dart VM Observatory'), true);
     } finally {
-      await sub?.cancel();
-      process?.kill();
+      await sub.cancel();
+      process.kill();
     }
   });
 
   testWithoutContext('flutter test should serve DevTools', () async {
-    Process? process;
-    StreamSubscription<String>? sub;
+    late final Process process;
+    late final StreamSubscription<String> sub;
     try {
       process = await _runFlutterTestConcurrent('trivial', automatedTestsDirectory, flutterTestDirectory,
         extraArguments: const <String>['--start-paused']);
@@ -300,10 +256,10 @@ void main() {
       final HttpClientRequest request = await client.getUrl(devToolsUri);
       final HttpClientResponse response = await request.close();
       final String content = await response.transform(utf8.decoder).join();
-      expect(content, contains('DevTools'));
+      expect(content.contains('DevTools'), true);
     } finally {
-      await sub?.cancel();
-      process?.kill();
+      await sub.cancel();
+      process.kill();
     }
   });
 }
@@ -329,12 +285,7 @@ Future<void> _testFile(
     extraArguments: extraArguments,
   );
 
-  expect(
-    exec.exitCode,
-    exitCode,
-    reason: '"$testName" returned code ${exec.exitCode}\n\nstdout:\n'
-            '${exec.stdout}\nstderr:\n${exec.stderr}',
-  );
+  expect(exec.exitCode, exitCode);
   final List<String> output = (exec.stdout as String).split('\n');
   if (output.first.startsWith('Waiting for another flutter command to release the startup lock...')) {
     output.removeAt(0);

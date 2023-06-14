@@ -3,7 +3,8 @@
 // found in the LICENSE file.
 
 import 'dart:html' as html;
-import 'dart:ui_web' as ui_web;
+// platformViewRegistry is exposed in the web version
+import 'dart:ui' as ui show platformViewRegistry; // ignore: undefined_shown_name
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +37,8 @@ void main() {
     int viewInstanceCount = 0;
 
     platformViewsRegistry.getNextPlatformViewId();
-    ui_web.platformViewRegistry.registerViewFactory('MyView', (int viewId) {
+    // ignore: undefined_prefixed_name, avoid_dynamic_calls
+    ui.platformViewRegistry.registerViewFactory('MyView', (int viewId) {
       viewInstanceCount += 1;
       return html.DivElement();
     });

@@ -17,11 +17,11 @@ class MemoryPressureObserver with WidgetsBindingObserver {
 }
 
 class AppLifecycleStateObserver with WidgetsBindingObserver {
-  List<AppLifecycleState> accumulatedStates = <AppLifecycleState>[];
+  late AppLifecycleState lifecycleState;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    accumulatedStates.add(state);
+    lifecycleState = state;
   }
 }
 
@@ -66,58 +66,19 @@ void main() {
     final AppLifecycleStateObserver observer = AppLifecycleStateObserver();
     WidgetsBinding.instance.addObserver(observer);
 
-    await setAppLifeCycleState(AppLifecycleState.paused);
-    expect(observer.accumulatedStates, <AppLifecycleState>[AppLifecycleState.paused]);
+    setAppLifeCycleState(AppLifecycleState.paused);
+    expect(observer.lifecycleState, AppLifecycleState.paused);
 
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.resumed);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.hidden,
-      AppLifecycleState.inactive,
-      AppLifecycleState.resumed,
-    ]);
+    setAppLifeCycleState(AppLifecycleState.resumed);
+    expect(observer.lifecycleState, AppLifecycleState.resumed);
 
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.paused);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.inactive,
-      AppLifecycleState.hidden,
-      AppLifecycleState.paused,
-    ]);
+    setAppLifeCycleState(AppLifecycleState.inactive);
+    expect(observer.lifecycleState, AppLifecycleState.inactive);
 
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.inactive);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.hidden,
-      AppLifecycleState.inactive,
-    ]);
+    setAppLifeCycleState(AppLifecycleState.detached);
+    expect(observer.lifecycleState, AppLifecycleState.detached);
 
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.hidden);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.hidden,
-    ]);
-
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.paused);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.paused,
-    ]);
-
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.detached);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.detached,
-    ]);
-
-    observer.accumulatedStates.clear();
-    await setAppLifeCycleState(AppLifecycleState.resumed);
-    expect(observer.accumulatedStates, <AppLifecycleState>[
-      AppLifecycleState.resumed,
-    ]);
-
-    observer.accumulatedStates.clear();
-    await expectLater(() async => setAppLifeCycleState(AppLifecycleState.detached), throwsAssertionError);
+    setAppLifeCycleState(AppLifecycleState.resumed);
   });
 
   testWidgets('didPushRoute callback', (WidgetTester tester) async {
@@ -126,7 +87,7 @@ void main() {
 
     const String testRouteName = 'testRouteName';
     final ByteData message = const JSONMethodCodec().encodeMethodCall(const MethodCall('pushRoute', testRouteName));
-    await tester.binding.defaultBinaryMessenger.handlePlatformMessage('flutter/navigation', message, (_) {});
+    await tester.binding.defaultBinaryMessenger.handlePlatformMessage('flutter/navigation', message, (_) { });
     expect(observer.pushedRoute, testRouteName);
 
     WidgetsBinding.instance.removeObserver(observer);
@@ -238,29 +199,26 @@ void main() {
   testWidgets('Application lifecycle affects frame scheduling', (WidgetTester tester) async {
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.paused);
+    setAppLifeCycleState(AppLifecycleState.paused);
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.resumed);
+    setAppLifeCycleState(AppLifecycleState.resumed);
     expect(tester.binding.hasScheduledFrame, isTrue);
     await tester.pump();
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.inactive);
+    setAppLifeCycleState(AppLifecycleState.inactive);
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.paused);
+    setAppLifeCycleState(AppLifecycleState.detached);
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.detached);
-    expect(tester.binding.hasScheduledFrame, isFalse);
-
-    await setAppLifeCycleState(AppLifecycleState.inactive);
+    setAppLifeCycleState(AppLifecycleState.inactive);
     expect(tester.binding.hasScheduledFrame, isTrue);
     await tester.pump();
     expect(tester.binding.hasScheduledFrame, isFalse);
 
-    await setAppLifeCycleState(AppLifecycleState.paused);
+    setAppLifeCycleState(AppLifecycleState.paused);
     expect(tester.binding.hasScheduledFrame, isFalse);
 
     tester.binding.scheduleFrame();
@@ -284,7 +242,7 @@ void main() {
     expect(frameCount, 1);
 
     // Get the tester back to a resumed state for subsequent tests.
-    await setAppLifeCycleState(AppLifecycleState.resumed);
+    setAppLifeCycleState(AppLifecycleState.resumed);
     expect(tester.binding.hasScheduledFrame, isTrue);
     await tester.pump();
   });

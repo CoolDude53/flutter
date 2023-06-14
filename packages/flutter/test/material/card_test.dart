@@ -22,9 +22,9 @@ void main() {
                 children: <Widget>[
                   const Text('I am text!'),
                   const Text('Moar text!!1'),
-                  ElevatedButton(
-                    onPressed: () { },
+                  MaterialButton(
                     child: const Text('Button'),
+                    onPressed: () { },
                   ),
                 ],
               ),

@@ -407,8 +407,8 @@ abstract class CreateBase extends FlutterCommand {
       'iosLanguage': iosLanguage,
       'hasIosDevelopmentTeam': iosDevelopmentTeam != null && iosDevelopmentTeam.isNotEmpty,
       'iosDevelopmentTeam': iosDevelopmentTeam ?? '',
-      'flutterRevision': escapeYamlString(globals.flutterVersion.frameworkRevision),
-      'flutterChannel': escapeYamlString(globals.flutterVersion.getBranchName()), // may contain PII
+      'flutterRevision': globals.flutterVersion.frameworkRevision,
+      'flutterChannel': globals.flutterVersion.channel,
       'ios': ios,
       'android': android,
       'web': web,
@@ -571,11 +571,10 @@ abstract class CreateBase extends FlutterCommand {
       final FlutterProjectMetadata metadata = FlutterProjectMetadata.explicit(
         file: metadataFile,
         versionRevision: globals.flutterVersion.frameworkRevision,
-        versionChannel: globals.flutterVersion.getBranchName(), // may contain PII
+        versionChannel: globals.flutterVersion.channel,
         projectType: projectType,
         migrateConfig: MigrateConfig(),
-        logger: globals.logger,
-      );
+        logger: globals.logger);
       metadata.populate(
         platforms: platformsForMigrateConfig,
         projectDirectory: directory,

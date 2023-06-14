@@ -52,12 +52,6 @@ void main() {
       );
     });
 
-    testWidgets('updating devicePixelRatio also updates display.devicePixelRatio', (WidgetTester tester) async {
-      tester.view.devicePixelRatio = tester.view.devicePixelRatio + 1;
-
-      expect(tester.view.display.devicePixelRatio, tester.view.devicePixelRatio);
-    });
-
     testWidgets('can fake displayFeatures', (WidgetTester tester) async {
       verifyPropertyFaked<List<DisplayFeature>>(
         tester: tester,
@@ -294,7 +288,6 @@ void main() {
       final TestFlutterView view = TestFlutterView(
         view: backingView,
         platformDispatcher: tester.binding.platformDispatcher,
-        display: _FakeDisplay(),
       );
 
       view.render(expectedScene);
@@ -309,7 +302,6 @@ void main() {
       final TestFlutterView view = TestFlutterView(
         view: backingView,
         platformDispatcher: tester.binding.platformDispatcher,
-        display: _FakeDisplay(),
       );
 
       view.updateSemantics(expectedUpdate);
@@ -319,6 +311,7 @@ void main() {
     });
   });
 }
+
 
 Matcher matchesSnapshot(FlutterViewSnapshot expected) => _FlutterViewSnapshotMatcher(expected);
 
@@ -431,7 +424,7 @@ class FlutterViewSnapshot {
   final ViewPadding viewPadding;
 }
 
-class _FakeFlutterView extends Fake implements FlutterView {
+class _FakeFlutterView implements FlutterView {
   SemanticsUpdate? lastSemanticsUpdate;
   Scene? lastRenderedScene;
 
@@ -444,6 +437,9 @@ class _FakeFlutterView extends Fake implements FlutterView {
   void render(Scene scene) {
     lastRenderedScene = scene;
   }
-}
 
-class _FakeDisplay extends Fake implements TestDisplay { }
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    return null;
+  }
+}

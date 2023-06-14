@@ -315,7 +315,7 @@ class _BottomSheetState extends State<BottomSheet> {
   }
 
   bool extentChanged(DraggableScrollableNotification notification) {
-    if (notification.extent == notification.minExtent && notification.shouldCloseOnMinExtent) {
+    if (notification.extent == notification.minExtent) {
       widget.onClosing();
     }
     return false;
@@ -357,14 +357,15 @@ class _BottomSheetState extends State<BottomSheet> {
         dragHandleColor: widget.dragHandleColor,
         dragHandleSize: widget.dragHandleSize,
       );
-      // Only add [_BottomSheetGestureDetector] to the drag handle when the rest of the
+      // Only add [GestureDetector] to the drag handle when the rest of the
       // bottom sheet is not draggable. If the whole bottom sheet is draggable,
       // no need to add it.
       if (!widget.enableDrag) {
-        dragHandle = _BottomSheetGestureDetector(
+        dragHandle = GestureDetector(
           onVerticalDragStart: _handleDragStart,
           onVerticalDragUpdate: _handleDragUpdate,
           onVerticalDragEnd: _handleDragEnd,
+          excludeFromSemantics: true,
           child: dragHandle,
         );
       }
@@ -406,10 +407,11 @@ class _BottomSheetState extends State<BottomSheet> {
       );
     }
 
-    return !widget.enableDrag ? bottomSheet : _BottomSheetGestureDetector(
+    return !widget.enableDrag ? bottomSheet : GestureDetector(
       onVerticalDragStart: _handleDragStart,
       onVerticalDragUpdate: _handleDragUpdate,
       onVerticalDragEnd: _handleDragEnd,
+      excludeFromSemantics: true,
       child: bottomSheet,
     );
   }
@@ -1150,9 +1152,6 @@ class _BottomSheetSuspendedCurve extends ParametricCurve<double> {
 /// Returns a `Future` that resolves to the value (if any) that was passed to
 /// [Navigator.pop] when the modal bottom sheet was closed.
 ///
-/// The 'barrierLabel' parameter can be used to set a custom barrierlabel.
-/// Will default to modalBarrierDismissLabel of context if not set.
-///
 /// {@tool dartpad}
 /// This example demonstrates how to use [showModalBottomSheet] to display a
 /// bottom sheet that obscures the content behind it when a user taps a button.
@@ -1185,7 +1184,6 @@ Future<T?> showModalBottomSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   Color? backgroundColor,
-  String? barrierLabel,
   double? elevation,
   ShapeBorder? shape,
   Clip? clipBehavior,
@@ -1210,7 +1208,7 @@ Future<T?> showModalBottomSheet<T>({
     builder: builder,
     capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
     isScrollControlled: isScrollControlled,
-    barrierLabel: barrierLabel ?? localizations.scrimLabel,
+    barrierLabel: localizations.scrimLabel,
     barrierOnTapHint: localizations.scrimOnTapHint(localizations.bottomSheetLabel),
     backgroundColor: backgroundColor,
     elevation: elevation,
@@ -1298,39 +1296,7 @@ PersistentBottomSheetController<T> showBottomSheet<T>({
   );
 }
 
-class _BottomSheetGestureDetector extends StatelessWidget {
-  const _BottomSheetGestureDetector({
-    required this.child,
-    required this.onVerticalDragStart,
-    required this.onVerticalDragUpdate,
-    required this.onVerticalDragEnd,
-  });
 
-  final Widget child;
-  final GestureDragStartCallback onVerticalDragStart;
-  final GestureDragUpdateCallback onVerticalDragUpdate;
-  final GestureDragEndCallback onVerticalDragEnd;
-
-  @override
-  Widget build(BuildContext context) {
-    return RawGestureDetector(
-      excludeFromSemantics: true,
-      gestures: <Type, GestureRecognizerFactory<GestureRecognizer>>{
-        VerticalDragGestureRecognizer : GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
-          () => VerticalDragGestureRecognizer(debugOwner: this),
-          (VerticalDragGestureRecognizer instance) {
-            instance
-              ..onStart = onVerticalDragStart
-              ..onUpdate = onVerticalDragUpdate
-              ..onEnd = onVerticalDragEnd
-              ..onlyAcceptDragOnThreshold = true;
-          },
-        ),
-      },
-      child: child,
-    );
-  }
-}
 
 // BEGIN GENERATED TOKEN PROPERTIES - BottomSheet
 
@@ -1338,6 +1304,8 @@ class _BottomSheetGestureDetector extends StatelessWidget {
 // "END GENERATED" comments are generated from data in the Material
 // Design token database by the script:
 //   dev/tools/gen_defaults/bin/gen_defaults.dart.
+
+// Token database version: v0_162
 
 class _BottomSheetDefaultsM3 extends BottomSheetThemeData {
   _BottomSheetDefaultsM3(this.context)

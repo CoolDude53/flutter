@@ -113,7 +113,6 @@ void main() {
     (WidgetTester tester) async {
 
     final ThemeData themeData = ThemeData();
-    final bool useMaterial3 = themeData.useMaterial3;
     await tester.pumpWidget(
       MaterialApp(
         theme: themeData,
@@ -129,7 +128,7 @@ void main() {
 
     final Finder textField = find.byType(TextField);
     final Size anchorSize = tester.getSize(textField);
-    expect(anchorSize, useMaterial3 ? const Size(195.0, 60.0) : const Size(180.0, 56.0));
+    expect(anchorSize, const Size(180.0, 56.0));
 
     await tester.tap(find.byType(DropdownMenu<TestMenu>));
     await tester.pumpAndSettle();
@@ -139,7 +138,7 @@ void main() {
       matching: find.byType(Material),
     );
     final Size menuSize = tester.getSize(menuMaterial);
-    expect(menuSize, useMaterial3 ? const Size(195.0, 304.0) : const Size(180.0, 304.0));
+    expect(menuSize, const Size(180.0, 304.0));
 
     // The text field should have same width as the menu
     // when the width property is not null.
@@ -147,7 +146,7 @@ void main() {
 
     final Finder anchor = find.byType(TextField);
     final Size size = tester.getSize(anchor);
-    expect(size, useMaterial3 ? const Size(200.0, 60.0) : const Size(200.0, 56.0));
+    expect(size, const Size(200.0, 56.0));
 
     await tester.tap(anchor);
     await tester.pumpAndSettle();
@@ -219,7 +218,6 @@ void main() {
   testWidgets('The menuHeight property can be used to show a shorter scrollable menu list instead of the complete list',
     (WidgetTester tester) async {
     final ThemeData themeData = ThemeData();
-    final bool material3 = themeData.useMaterial3;
     await tester.pumpWidget(buildTest(themeData, menuChildren));
 
     await tester.tap(find.byType(DropdownMenu<TestMenu>));
@@ -239,7 +237,7 @@ void main() {
       matching: find.byType(Padding),
     ).first;
     final Size menuViewSize = tester.getSize(menuView);
-    expect(menuViewSize, material3 ? const Size(195.0, 304.0) : const Size(180.0, 304.0)); // 304 = 288 + vertical padding(2 * 8)
+    expect(menuViewSize, const Size(180.0, 304.0)); // 304 = 288 + vertical padding(2 * 8)
 
     // Constrains the menu height.
     await tester.pumpWidget(Container());
@@ -255,7 +253,7 @@ void main() {
     ).first;
 
     final Size updatedMenuSize = tester.getSize(updatedMenu);
-    expect(updatedMenuSize, material3 ? const Size(195.0, 100.0) : const Size(180.0, 100.0));
+    expect(updatedMenuSize, const Size(180.0, 100.0));
   });
 
   testWidgets('The text in the menu button should be aligned with the text of '

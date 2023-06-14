@@ -77,8 +77,7 @@ class _AndroidSemanticsMatcher extends Matcher {
     this.isHeading,
     this.isPassword,
     this.isLongClickable,
-  }) : assert(ignoredActions == null || actions != null, 'actions must not be null if ignoredActions is not null'),
-       assert(ignoredActions == null || !actions!.any(ignoredActions.contains));
+  });
 
   final String? text;
   final String? className;
@@ -115,9 +114,6 @@ class _AndroidSemanticsMatcher extends Matcher {
     }
     if (actions != null) {
       description.add(' with actions: $actions');
-    }
-    if (ignoredActions != null) {
-      description.add(' with ignoredActions: $ignoredActions');
     }
     if (rect != null) {
       description.add(' with rect: $rect');
@@ -174,15 +170,13 @@ class _AndroidSemanticsMatcher extends Matcher {
     }
     if (actions != null) {
       final List<AndroidSemanticsAction> itemActions = item.getActions();
-      if (ignoredActions != null) {
-        itemActions.removeWhere(ignoredActions!.contains);
-      }
       if (!unorderedEquals(actions!).matches(itemActions, matchState)) {
         final List<String> actionsString = actions!.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
         final List<String> itemActionsString = itemActions.map<String>((AndroidSemanticsAction action) => action.toString()).toList()..sort();
+        final Set<AndroidSemanticsAction> unexpected = itemActions.toSet().difference(actions!.toSet());
         final Set<String> unexpectedInString = itemActionsString.toSet().difference(actionsString.toSet());
         final Set<String> missingInString = actionsString.toSet().difference(itemActionsString.toSet());
-        if (missingInString.isEmpty && unexpectedInString.isEmpty) {
+        if (missingInString.isEmpty && ignoredActions != null && unexpected.every(ignoredActions!.contains)) {
           return true;
         }
         return _failWithMessage('Expected actions: $actionsString\nActual actions: $itemActionsString\nUnexpected: $unexpectedInString\nMissing: $missingInString', matchState);

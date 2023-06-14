@@ -325,6 +325,7 @@ class ImageCache {
   /// cause other images in the cache to be evicted.
   ImageStreamCompleter? putIfAbsent(Object key, ImageStreamCompleter Function() loader, { ImageErrorListener? onError }) {
     TimelineTask? timelineTask;
+    TimelineTask? listenerTask;
     if (!kReleaseMode) {
       timelineTask = TimelineTask()..start(
         'ImageCache.putIfAbsent',
@@ -397,7 +398,7 @@ class ImageCache {
     }
 
     if (!kReleaseMode) {
-      timelineTask!.start('listener');
+      listenerTask = TimelineTask(parent: timelineTask)..start('listener');
     }
     // A multi-frame provider may call the listener more than once. We need do make
     // sure that some cleanup works won't run multiple times, such as finishing the
@@ -424,7 +425,7 @@ class ImageCache {
 
       // Only touch if the cache was enabled when resolve was initially called.
       if (trackPendingImage) {
-        _touch(key, image, timelineTask);
+        _touch(key, image, listenerTask);
       } else {
         image.dispose();
       }
@@ -434,15 +435,14 @@ class ImageCache {
         pendingImage.removeListener();
       }
       if (!kReleaseMode && !listenedOnce) {
-        timelineTask!
-          ..finish(arguments: <String, dynamic>{
-            'syncCall': syncCall,
-            'sizeInBytes': sizeBytes,
-          })
-          ..finish(arguments: <String, dynamic>{
-            'currentSizeBytes': currentSizeBytes,
-            'currentSize': currentSize,
-          });
+        listenerTask!.finish(arguments: <String, dynamic>{
+          'syncCall': syncCall,
+          'sizeInBytes': sizeBytes,
+        });
+        timelineTask!.finish(arguments: <String, dynamic>{
+          'currentSizeBytes': currentSizeBytes,
+          'currentSize': currentSize,
+        });
       }
       listenedOnce = true;
     }
@@ -504,8 +504,9 @@ class ImageCache {
   // maximum, or the cache is empty.
   void _checkCacheSize(TimelineTask? timelineTask) {
     final Map<String, dynamic> finishArgs = <String, dynamic>{};
+    TimelineTask? checkCacheTask;
     if (!kReleaseMode) {
-      timelineTask!.start('checkCacheSize');
+      checkCacheTask = TimelineTask(parent: timelineTask)..start('checkCacheSize');
       finishArgs['evictedKeys'] = <String>[];
       finishArgs['currentSize'] = currentSize;
       finishArgs['currentSizeBytes'] = currentSizeBytes;
@@ -523,7 +524,7 @@ class ImageCache {
     if (!kReleaseMode) {
       finishArgs['endSize'] = currentSize;
       finishArgs['endSizeBytes'] = currentSizeBytes;
-      timelineTask!.finish(arguments: finishArgs);
+      checkCacheTask!.finish(arguments: finishArgs);
     }
     assert(_currentSizeBytes >= 0);
     assert(_cache.length <= maximumSize);

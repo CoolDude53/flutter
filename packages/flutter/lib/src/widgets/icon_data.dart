@@ -31,7 +31,6 @@ class IconData {
     this.fontFamily,
     this.fontPackage,
     this.matchTextDirection = false,
-    this.fontFamilyFallback,
   });
 
   /// The Unicode code point at which this icon is stored in the icon font.
@@ -57,11 +56,6 @@ class IconData {
   /// [Directionality] is [TextDirection.rtl].
   final bool matchTextDirection;
 
-  /// The ordered list of font families to fall back on when a glyph cannot be found in a higher priority font family.
-  ///
-  /// For more details, refer to the documentation of [TextStyle]
-  final List<String>? fontFamilyFallback;
-
   @override
   bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) {
@@ -71,20 +65,11 @@ class IconData {
         && other.codePoint == codePoint
         && other.fontFamily == fontFamily
         && other.fontPackage == fontPackage
-        && other.matchTextDirection == matchTextDirection
-        && listEquals(other.fontFamilyFallback, fontFamilyFallback);
+        && other.matchTextDirection == matchTextDirection;
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      codePoint,
-      fontFamily,
-      fontPackage,
-      matchTextDirection,
-      Object.hashAll(fontFamilyFallback ?? const <String?>[]),
-    );
-  }
+  int get hashCode => Object.hash(codePoint, fontFamily, fontPackage, matchTextDirection);
 
   @override
   String toString() => 'IconData(U+${codePoint.toRadixString(16).toUpperCase().padLeft(5, '0')})';

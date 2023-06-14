@@ -665,7 +665,7 @@ Future<void> _createStubAppFramework(File outputFile, Environment environment,
     await globals.xcode!.clang(<String>[
       '-x',
       'c',
-      for (final String arch in iosArchNames ?? <String>{}) ...<String>['-arch', arch],
+      for (String arch in iosArchNames ?? <String>{}) ...<String>['-arch', arch],
       stubSource.path,
       '-dynamiclib',
       // Keep version in sync with AOTSnapshotter flag

@@ -33,9 +33,5 @@ void main() {
     expect(extractPathname('https://example.com/foo'), '/foo');
     expect(extractPathname('https://example.com/foo#bar'), '/foo');
     expect(extractPathname('https://example.com/foo/#bar'), '/foo/');
-
-    // URL encoding.
-    expect(extractPathname('/foo bar'), '/foo%20bar');
-    expect(extractPathname('https://example.com/foo bar'), '/foo%20bar');
   });
 }

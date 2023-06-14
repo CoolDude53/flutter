@@ -273,8 +273,6 @@ class ReorderableListView extends StatefulWidget {
   final Widget? prototypeItem;
 
   /// {@macro flutter.widgets.EdgeDraggingAutoScroller.velocityScalar}
-  ///
-  /// {@macro flutter.widgets.SliverReorderableList.autoScrollerVelocityScalar.default}
   final double? autoScrollerVelocityScalar;
 
   @override

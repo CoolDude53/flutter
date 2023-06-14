@@ -48,7 +48,7 @@ class TestMouseTrackerFlutterBinding extends BindingBase
     final SchedulerPhase? lastPhase = _overridePhase;
     _overridePhase = SchedulerPhase.persistentCallbacks;
     addPostFrameCallback((_) {
-      mouseTracker.updateAllDevices();
+      mouseTracker.updateAllDevices(renderView.hitTestMouseTrackers);
     });
     _overridePhase = lastPhase;
   }

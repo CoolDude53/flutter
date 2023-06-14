@@ -115,37 +115,40 @@ void main() {
   });
 
   testWidgets(
-      'M3 NavigationDrawer uses proper defaults when no parameters are given',
+      'NavigationDrawer uses proper defaults when no parameters are given',
       (WidgetTester tester) async {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    final ThemeData theme = ThemeData(useMaterial3: true);
+    final ThemeData theme= ThemeData.from(colorScheme: const ColorScheme.light());
+    // M3 settings from the token database.
     await tester.pumpWidget(
       _buildWidget(
         scaffoldKey,
-        NavigationDrawer(
-          children: <Widget>[
-            Text('Headline', style: theme.textTheme.bodyLarge),
-            NavigationDrawerDestination(
-              icon: Icon(Icons.ac_unit, color: theme.iconTheme.color),
-              label: Text('AC', style: theme.textTheme.bodySmall),
-            ),
-            NavigationDrawerDestination(
-              icon: Icon(Icons.access_alarm, color: theme.iconTheme.color),
-              label: Text('Alarm', style: theme.textTheme.bodySmall),
-            ),
-          ],
-          onDestinationSelected: (int i) {},
+        Theme(
+          data: ThemeData.light().copyWith(useMaterial3: true),
+          child: NavigationDrawer(
+            children: <Widget>[
+              Text('Headline', style: theme.textTheme.bodyLarge),
+              NavigationDrawerDestination(
+                icon: Icon(Icons.ac_unit, color: theme.iconTheme.color),
+                label: Text('AC', style: theme.textTheme.bodySmall),
+              ),
+              NavigationDrawerDestination(
+                icon: Icon(Icons.access_alarm, color: theme.iconTheme.color),
+                label: Text('Alarm', style: theme.textTheme.bodySmall),
+              ),
+            ],
+            onDestinationSelected: (int i) {},
+          ),
         ),
-        useMaterial3: theme.useMaterial3,
       ),
     );
     scaffoldKey.currentState!.openDrawer();
     await tester.pump(const Duration(seconds: 1));
 
-    expect(_getMaterial(tester).color, theme.colorScheme.surface);
-    expect(_getMaterial(tester).surfaceTintColor, theme.colorScheme.surfaceTint);
+    expect(_getMaterial(tester).color, ThemeData().colorScheme.surface);
+    expect(_getMaterial(tester).surfaceTintColor, ThemeData().colorScheme.surfaceTint);
     expect(_getMaterial(tester).elevation, 1);
-    expect(_getIndicatorDecoration(tester)?.color, theme.colorScheme.secondaryContainer);
+    expect(_getIndicatorDecoration(tester)?.color, const Color(0xff2196f3));
     expect(_getIndicatorDecoration(tester)?.shape, const StadiumBorder());
   });
 
@@ -382,9 +385,9 @@ void main() {
   });
 }
 
-Widget _buildWidget(GlobalKey<ScaffoldState> scaffoldKey, Widget child, { bool? useMaterial3 }) {
+Widget _buildWidget(GlobalKey<ScaffoldState> scaffoldKey, Widget child) {
   return MaterialApp(
-    theme: ThemeData(useMaterial3: useMaterial3),
+    theme: ThemeData.light(),
     home: Scaffold(
       key: scaffoldKey,
       drawer: child,

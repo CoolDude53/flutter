@@ -991,7 +991,6 @@ void main() {
 
   testWidgets('ListTile can be splashed and has correct splash color', (WidgetTester tester) async {
     final Widget buildApp = MaterialApp(
-      theme: ThemeData(useMaterial3: false),
       home: Material(
         child: Center(
           child: SizedBox(
@@ -1280,7 +1279,6 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Material(
           child: Center(
             child: ListTile(
@@ -1809,7 +1807,6 @@ void main() {
       bool selected = false,
     }) {
       return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Material(
           child: Center(
             child: Builder(
@@ -1950,13 +1947,13 @@ void main() {
     // ListTile default text colors.
     await tester.pumpWidget(buildFrame());
     final RenderParagraph leading = _getTextRenderObject(tester, 'leading');
-    expect(leading.text.style!.color, theme.colorScheme.onSurfaceVariant);
+    expect(leading.text.style!.color, theme.textTheme.labelSmall!.color);
     final RenderParagraph title = _getTextRenderObject(tester, 'title');
-    expect(title.text.style!.color, theme.colorScheme.onSurface);
+    expect(title.text.style!.color, theme.textTheme.bodyLarge!.color);
     final RenderParagraph subtitle = _getTextRenderObject(tester, 'subtitle');
-    expect(subtitle.text.style!.color, theme.colorScheme.onSurfaceVariant);
+    expect(subtitle.text.style!.color, theme.textTheme.bodyMedium!.color);
     final RenderParagraph trailing = _getTextRenderObject(tester, 'trailing');
-    expect(trailing.text.style!.color, theme.colorScheme.onSurfaceVariant);
+    expect(trailing.text.style!.color, theme.textTheme.labelSmall!.color);
   });
 
   testWidgets('Default ListTile debugFillProperties', (WidgetTester tester) async {
@@ -2482,9 +2479,8 @@ void main() {
   });
 
   group('Material 2', () {
-    // These tests are only relevant for Material 2. Once Material 2
-    // support is deprecated and the APIs are removed, these tests
-    // can be deleted.
+    // Tests that are only relevant for Material 2. Once ThemeData.useMaterial3
+    // is turned on by default, these tests can be removed.
 
     testWidgets('ListTile geometry (LTR)', (WidgetTester tester) async {
       // See https://material.io/go/design-lists
@@ -3574,7 +3570,6 @@ void main() {
     });
 
     testWidgets('ListTile text color', (WidgetTester tester) async {
-      final ThemeData theme = ThemeData(useMaterial3: false);
       Widget buildFrame({
         bool dense = false,
         bool enabled = true,
@@ -3582,7 +3577,7 @@ void main() {
         ListTileStyle? style,
       }) {
         return MaterialApp(
-          theme: theme,
+          theme: ThemeData(useMaterial3: false),
           home: Material(
             child: Center(
               child: Builder(
@@ -3603,6 +3598,8 @@ void main() {
           ),
         );
       }
+
+      final ThemeData theme = ThemeData();
 
       // ListTile - ListTileStyle.list (default).
       await tester.pumpWidget(buildFrame());

@@ -14,7 +14,7 @@ import '../widgets/semantics_tester.dart';
 void main() {
   testWidgets('FilledButton, FilledButton.icon defaults', (WidgetTester tester) async {
     const ColorScheme colorScheme = ColorScheme.light();
-    final ThemeData theme = ThemeData.from(useMaterial3: false, colorScheme: colorScheme);
+    final ThemeData theme = ThemeData.from(colorScheme: colorScheme);
 
     // Enabled FilledButton
     await tester.pumpWidget(
@@ -884,21 +884,18 @@ void main() {
   testWidgets('Does FilledButton contribute semantics', (WidgetTester tester) async {
     final SemanticsTester semantics = SemanticsTester(tester);
     await tester.pumpWidget(
-      Theme(
-        data: ThemeData(useMaterial3: false),
-        child: Directionality(
-          textDirection: TextDirection.ltr,
-          child: Center(
-            child: FilledButton(
-              style: const ButtonStyle(
-                // Specifying minimumSize to mimic the original minimumSize for
-                // RaisedButton so that the semantics tree's rect and transform
-                // match the original version of this test.
-                minimumSize: MaterialStatePropertyAll<Size>(Size(88, 36)),
-              ),
-              onPressed: () { },
-              child: const Text('ABC'),
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Center(
+          child: FilledButton(
+            style: const ButtonStyle(
+              // Specifying minimumSize to mimic the original minimumSize for
+              // RaisedButton so that the semantics tree's rect and transform
+              // match the original version of this test.
+              minimumSize: MaterialStatePropertyAll<Size>(Size(88, 36)),
             ),
+            onPressed: () { },
+            child: const Text('ABC'),
           ),
         ),
       ),
@@ -939,7 +936,7 @@ void main() {
 
     Widget buildFrame(MaterialTapTargetSize tapTargetSize, Key key) {
       return Theme(
-        data: ThemeData(useMaterial3: false, materialTapTargetSize: tapTargetSize),
+        data: ThemeData(materialTapTargetSize: tapTargetSize),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
@@ -987,7 +984,9 @@ void main() {
     Future<void> buildTest(VisualDensity visualDensity, {bool useText = false}) async {
       return tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(useMaterial3: false),
+          // Test was setup using fonts from Material 2, so make sure we always
+          // test against englishLike2014.
+          theme: ThemeData(textTheme: Typography.englishLike2014),
           home: Directionality(
             textDirection: TextDirection.rtl,
             child: Center(
@@ -1180,7 +1179,10 @@ void main() {
             await tester.pumpWidget(
               MaterialApp(
                 theme: ThemeData(
-                  useMaterial3: false,
+                  colorScheme: const ColorScheme.light(),
+                  // Force Material 2 defaults for the typography and size
+                  // default values as the test was designed against these settings.
+                  textTheme: Typography.englishLike2014,
                   filledButtonTheme: FilledButtonThemeData(
                     style: FilledButton.styleFrom(minimumSize: const Size(64, 36)),
                   ),
@@ -1408,7 +1410,7 @@ void main() {
     const Color borderColor = Color(0xff4caf50);
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
+        theme: ThemeData(colorScheme: const ColorScheme.light(), textTheme: Typography.englishLike2014),
         home: Center(
           child: FilledButton(
             style: FilledButton.styleFrom(
@@ -1597,7 +1599,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
+        theme: ThemeData(textTheme: Typography.englishLike2014),
         home: Scaffold(
           body: Center(
             child: Column(

@@ -4,7 +4,6 @@
 
 import '../framework/devices.dart';
 import '../framework/framework.dart';
-import '../framework/talkback.dart';
 import '../framework/task_result.dart';
 import '../framework/utils.dart';
 
@@ -75,10 +74,9 @@ TaskFunction createHybridAndroidViewsIntegrationTest() {
 }
 
 TaskFunction createAndroidSemanticsIntegrationTest() {
-  return IntegrationTest(
+  return DriverTest(
     '${flutterDirectory.path}/dev/integration_tests/android_semantics_testing',
-    'integration_test/main_test.dart',
-    withTalkBack: true,
+    'lib/main.dart',
   ).call;
 }
 
@@ -215,7 +213,6 @@ class IntegrationTest {
     this.testTarget, {
       this.extraOptions = const <String>[],
       this.createPlatforms = const <String>[],
-      this.withTalkBack = false,
     }
   );
 
@@ -223,7 +220,6 @@ class IntegrationTest {
   final String testTarget;
   final List<String> extraOptions;
   final List<String> createPlatforms;
-  final bool withTalkBack;
 
   Future<TaskResult> call() {
     return inDirectory<TaskResult>(testDirectory, () async {
@@ -241,13 +237,6 @@ class IntegrationTest {
         ]);
       }
 
-      if (withTalkBack) {
-        if (device is! AndroidDevice) {
-          return TaskResult.failure('A test that enables TalkBack can only be run on Android devices');
-        }
-        await enableTalkBack();
-      }
-
       final List<String> options = <String>[
         '-v',
         '-d',
@@ -256,10 +245,6 @@ class IntegrationTest {
         ...extraOptions,
       ];
       await flutter('test', options: options);
-
-      if (withTalkBack) {
-        await disableTalkBack();
-      }
 
       return TaskResult.success(null);
     });

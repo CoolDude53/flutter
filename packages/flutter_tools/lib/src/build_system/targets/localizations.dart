@@ -57,14 +57,12 @@ class GenerateLocalizationsTarget extends Target {
       logger: environment.logger,
       defaultArbDir: defaultArbDir,
     );
-    await generateLocalizations(
+    generateLocalizations(
       logger: environment.logger,
       options: options,
       projectDir: environment.projectDir,
       dependenciesDir: environment.buildDir,
       fileSystem: environment.fileSystem,
-      artifacts: environment.artifacts,
-      processManager: environment.processManager,
     );
 
     final Map<String, Object?> dependencies = json.decode(
@@ -76,12 +74,12 @@ class GenerateLocalizationsTarget extends Target {
       <File>[
         configFile,
         if (inputs != null)
-          for (final Object inputFile in inputs.whereType<Object>())
+          for (Object inputFile in inputs.whereType<Object>())
             environment.fileSystem.file(inputFile),
       ],
       <File>[
         if (outputs != null)
-          for (final Object outputFile in outputs.whereType<Object>())
+          for (Object outputFile in outputs.whereType<Object>())
             environment.fileSystem.file(outputFile),
       ],
     );

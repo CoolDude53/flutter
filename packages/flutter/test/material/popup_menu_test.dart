@@ -1560,7 +1560,6 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: Center(
             child: PopupMenuButton<String>(
@@ -1775,7 +1774,6 @@ void main() {
       double fontSize = 24,
     }) {
       return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         builder: (BuildContext context, Widget? child) {
           return Directionality(
             textDirection: textDirection,
@@ -2365,7 +2363,6 @@ void main() {
 
     Widget buildFrame(double width, double height) {
       return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         builder: (BuildContext context, Widget? child) {
           return MediaQuery(
             data: const MediaQueryData(
@@ -2425,7 +2422,6 @@ void main() {
 
     Widget buildFrame(double width, double height) {
       return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         builder: (BuildContext context, Widget? child) {
           return MediaQuery(
             data: const MediaQueryData(
@@ -2714,7 +2710,6 @@ void main() {
     Future<void> buildFrameWithoutChild({double? splashRadius}) {
       return tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(useMaterial3: false),
           home: Scaffold(
             body: Center(
               child: PopupMenuButton<String>(
@@ -3264,48 +3259,6 @@ void main() {
     final Offset childBottomLeft = tester.getBottomLeft(find.byKey(childKey));
     final Offset menuTopLeft = tester.getTopLeft(find.bySemanticsLabel('Popup menu'));
     expect(childBottomLeft, menuTopLeft);
-  });
-
-  testWidgets('PopupmenuItem onTap should be calling after Navigator.pop', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              PopupMenuButton<int>(
-                itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
-                  PopupMenuItem<int>(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const SizedBox(
-                            height: 200.0,
-                            child: Center(child: Text('ModalBottomSheet')),
-                          );
-                        },
-                      );
-                    },
-                    value: 10,
-                    child: const Text('ACTION'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    await tester.tap(find.byType(PopupMenuButton<int>));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('ACTION'));
-    await tester.pumpAndSettle();
-
-    // Verify that the ModalBottomSheet is displayed
-    final Finder modalBottomSheet = find.text('ModalBottomSheet');
-    expect(modalBottomSheet, findsOneWidget);
   });
 }
 

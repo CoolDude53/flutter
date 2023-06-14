@@ -6,7 +6,6 @@ import 'package:file/memory.dart';
 import 'package:file_testing/file_testing.dart';
 import 'package:flutter_tools/src/android/gradle_errors.dart';
 import 'package:flutter_tools/src/android/gradle_utils.dart';
-import 'package:flutter_tools/src/android/java.dart';
 import 'package:flutter_tools/src/base/bot_detector.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/logger.dart';
@@ -775,7 +774,6 @@ assembleFooTest
       );
       expect(processManager, hasNoRemainingExpectations);
     }, overrides: <Type, Generator>{
-      Java: () => FakeJava(),
       GradleUtils: () => FakeGradleUtils(),
       Platform: () => fakePlatform('android'),
       FileSystem: () => fileSystem,
@@ -818,7 +816,6 @@ assembleProfile
       );
       expect(processManager, hasNoRemainingExpectations);
     }, overrides: <Type, Generator>{
-      Java: () => FakeJava(),
       GradleUtils: () => FakeGradleUtils(),
       Platform: () => fakePlatform('android'),
       FileSystem: () => fileSystem,

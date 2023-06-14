@@ -167,7 +167,6 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: ThemeData(
-          useMaterial3: false,
           colorScheme: ColorScheme.fromSwatch().copyWith(primary: foregroundColor),
           unselectedWidgetColor: unselectedWidgetColor,
           textTheme: const TextTheme(titleMedium: TextStyle(color: headerColor)),
@@ -893,9 +892,8 @@ void main() {
   }, variant: const TargetPlatformVariant(<TargetPlatform>{ TargetPlatform.iOS, TargetPlatform.macOS }));
 
   group('Material 2', () {
-    // These tests are only relevant for Material 2. Once Material 2
-    // support is deprecated and the APIs are removed, these tests
-    // can be deleted.
+    // Tests that are only relevant for Material 2. Once ThemeData.useMaterial3
+    // is turned on by default, these tests can be removed.
 
     testWidgets('ExpansionTile default iconColor, textColor', (WidgetTester tester) async {
       final ThemeData theme = ThemeData(useMaterial3: false);

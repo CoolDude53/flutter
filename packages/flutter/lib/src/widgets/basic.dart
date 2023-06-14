@@ -1371,7 +1371,7 @@ class Transform extends SingleChildRenderObjectWidget {
 
   /// Creates a widget that scales its child along the 2D plane.
   ///
-  /// The `scaleX` argument provides the scalar by which to multiply the `x` axis, and the `scaleY` argument provides the scalar by which to multiply the `y` axis. Either may be omitted, in which case the scaling factor for that axis defaults to 1.0.
+  /// The `scaleX` argument provides the scalar by which to multiply the `x` axis, and the `scaleY` argument provides the scalar by which to multiply the `y` axis. Either may be omitted, in which case that axis defaults to 1.0.
   ///
   /// For convenience, to scale the child uniformly, instead of providing `scaleX` and `scaleY`, the `scale` parameter may be used.
   ///
@@ -5732,7 +5732,24 @@ class RichText extends MultiChildRenderObjectWidget {
     this.selectionColor,
   }) : assert(maxLines == null || maxLines > 0),
        assert(selectionRegistrar == null || selectionColor != null),
-       super(children: WidgetSpan.extractFromInlineSpan(text, textScaleFactor));
+       super(children: _extractChildren(text));
+
+  // Traverses the InlineSpan tree and depth-first collects the list of
+  // child widgets that are created in WidgetSpans.
+  static List<Widget> _extractChildren(InlineSpan span) {
+    int index = 0;
+    final List<Widget> result = <Widget>[];
+    span.visitChildren((InlineSpan span) {
+      if (span is WidgetSpan) {
+        result.add(Semantics(
+          tagForChildren: PlaceholderSpanIndexSemanticsTag(index++),
+          child: span.child,
+        ));
+      }
+      return true;
+    });
+    return result;
+  }
 
   /// The text to display in this widget.
   final InlineSpan text;
@@ -6983,8 +7000,6 @@ class MetaData extends SingleChildRenderObjectWidget {
 ///
 /// See also:
 ///
-///  * [SemanticsProperties], which contains a complete documentation for each
-///    of the constructor parameters that belongs to semantics properties.
 ///  * [MergeSemantics], which marks a subtree as being a single node for
 ///    accessibility purposes.
 ///  * [ExcludeSemantics], which excludes a subtree from the semantics tree
@@ -7006,8 +7021,6 @@ class Semantics extends SingleChildRenderObjectWidget {
   ///
   /// See also:
   ///
-  ///  * [SemanticsProperties], which contains a complete documentation for each
-  ///    of the constructor parameters that belongs to semantics properties.
   ///  * [SemanticsSortKey] for a class that determines accessibility traversal
   ///    order.
   Semantics({

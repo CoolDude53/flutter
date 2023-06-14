@@ -7,7 +7,8 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:package_config/package_config.dart';
 
-import 'android/java.dart';
+import 'android/android_sdk.dart';
+import 'android/android_studio.dart';
 import 'base/common.dart';
 import 'base/error_handling_io.dart';
 import 'base/file_system.dart';
@@ -386,17 +387,12 @@ class AndroidGenSnapshotArtifacts extends EngineCachedArtifact {
 /// A cached artifact containing the Maven dependencies used to build Android projects.
 ///
 /// This is a no-op if the android SDK is not available.
-///
-/// Set [Java] to `null` to indicate that no Java/JDK installation could be found.
 class AndroidMavenArtifacts extends ArtifactSet {
   AndroidMavenArtifacts(this.cache, {
-    required Java? java,
     required Platform platform,
-  }) : _java = java,
-       _platform = platform,
+  }) : _platform = platform,
        super(DevelopmentArtifact.androidMaven);
 
-  final Java? _java;
   final Platform _platform;
   final Cache cache;
 
@@ -408,8 +404,6 @@ class AndroidMavenArtifacts extends ArtifactSet {
     OperatingSystemUtils operatingSystemUtils,
     {bool offline = false}
   ) async {
-    // TODO(andrewkolos): Should this really be no-op if the Android SDK
-    // is unavailable? https://github.com/flutter/flutter/issues/127848
     if (globals.androidSdk == null) {
       return;
     }
@@ -430,7 +424,10 @@ class AndroidMavenArtifacts extends ArtifactSet {
           '--project-cache-dir', tempDir.path,
           'resolveDependencies',
         ],
-        environment: _java?.environment,
+        environment: <String, String>{
+          if (javaPath != null)
+            AndroidSdk.javaHomeEnvironmentVariable: javaPath!,
+        },
       );
       if (processResult.exitCode != 0) {
         logger.printError('Failed to download the Android dependencies');

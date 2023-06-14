@@ -10,8 +10,6 @@ class ListTileTemplate extends TokenTemplate {
     super.textThemePrefix = '_textTheme.',
   });
 
-  static const String tokenGroup = 'md.comp.list.list-item';
-
   @override
   String generate() => '''
 class _${blockName}DefaultsM3 extends ListTileThemeData {
@@ -20,7 +18,7 @@ class _${blockName}DefaultsM3 extends ListTileThemeData {
         contentPadding: const EdgeInsetsDirectional.only(start: 16.0, end: 24.0),
         minLeadingWidth: 24,
         minVerticalPadding: 8,
-        shape: ${shape("$tokenGroup.container")},
+        shape: ${shape("md.comp.list.list-item.container")},
       );
 
   final BuildContext context;
@@ -32,19 +30,19 @@ class _${blockName}DefaultsM3 extends ListTileThemeData {
   Color? get tileColor =>  Colors.transparent;
 
   @override
-  TextStyle? get titleTextStyle => ${textStyle("$tokenGroup.label-text")}!.copyWith(color: ${componentColor('$tokenGroup.label-text')});
+  TextStyle? get titleTextStyle => ${textStyle("md.comp.list.list-item.label-text")};
 
   @override
-  TextStyle? get subtitleTextStyle => ${textStyle("$tokenGroup.supporting-text")}!.copyWith(color: ${componentColor('$tokenGroup.supporting-text')});
+  TextStyle? get subtitleTextStyle => ${textStyle("md.comp.list.list-item.supporting-text")};
 
   @override
-  TextStyle? get leadingAndTrailingTextStyle => ${textStyle("$tokenGroup.trailing-supporting-text")}!.copyWith(color: ${componentColor('$tokenGroup.trailing-supporting-text')});
+  TextStyle? get leadingAndTrailingTextStyle => ${textStyle("md.comp.list.list-item.trailing-supporting-text")};
 
   @override
-  Color? get selectedColor => ${componentColor('$tokenGroup.selected.trailing-icon')};
+  Color? get selectedColor => ${componentColor('md.comp.list.list-item.selected.trailing-icon')};
 
   @override
-  Color? get iconColor => ${componentColor('$tokenGroup.trailing-icon')};
+  Color? get iconColor => ${componentColor('md.comp.list.list-item.trailing-icon')};
 }
 ''';
 }

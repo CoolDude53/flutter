@@ -34,18 +34,11 @@ void main() {
       <Map<String, dynamic>>[
         <String, dynamic>{
           'name': 'ImageCache.putIfAbsent',
-          'args': <String, dynamic>{
-            'key': 'Test',
-            'isolateId': isolateId,
-            'parentId': null,
-          },
+          'args': <String, dynamic>{'key': 'Test', 'isolateId': isolateId},
         },
         <String, dynamic>{
           'name': 'listener',
-          'args': <String, dynamic>{
-            'isolateId': isolateId,
-            'parentId': null,
-          },
+          'args': <String, dynamic>{'isolateId': isolateId},
         },
         <String, dynamic>{
           'name': 'ImageCache.clear',
@@ -55,24 +48,15 @@ void main() {
             'liveImages': 1,
             'currentSizeInBytes': 0,
             'isolateId': isolateId,
-            'parentId': null,
           },
         },
         <String, dynamic>{
           'name': 'ImageCache.putIfAbsent',
-          'args': <String, dynamic>{
-            'key': 'Test2',
-            'isolateId': isolateId,
-            'parentId': null,
-          },
+          'args': <String, dynamic>{'key': 'Test2', 'isolateId': isolateId},
         },
         <String, dynamic>{
           'name': 'ImageCache.evict',
-          'args': <String, dynamic>{
-            'sizeInBytes': 4,
-            'isolateId': isolateId,
-            'parentId': null,
-          },
+          'args': <String, dynamic>{'sizeInBytes': 4, 'isolateId': isolateId},
         },
       ],
     );

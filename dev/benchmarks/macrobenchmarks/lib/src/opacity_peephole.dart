@@ -21,7 +21,7 @@ class OpacityPeepholePage extends StatelessWidget {
       body: ListView(
         key: const Key(kOpacityScrollableName),
         children: <Widget>[
-          for (final OpacityPeepholeCase variant in allOpacityPeepholeCases)
+          for (OpacityPeepholeCase variant in allOpacityPeepholeCases)
             ElevatedButton(
               key: Key(variant.route),
               child: Text(variant.name),

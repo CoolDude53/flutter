@@ -44,22 +44,18 @@ void main() {
       );
 
       // Pre-cache iOS engine Flutter.xcframework artifacts.
-      ProcessResult result = processManager.runSync(
-        <String>[
-          flutterBin,
-          ...getLocalEngineArguments(),
-          'precache',
-          '--ios',
-        ],
-        workingDirectory: tempDir.path,
-      );
-      expect(result, const ProcessResultMatcher());
+      processManager.runSync(<String>[
+        flutterBin,
+        ...getLocalEngineArguments(),
+        'precache',
+        '--ios',
+      ], workingDirectory: tempDir.path);
 
       // Pretend the SDK was on an external drive with stray "._" files in the xcframework
       hiddenFile = xcframeworkArtifact.childFile('._Info.plist')..createSync();
 
       // Test a plugin example app to allow plugins validation.
-      result = processManager.runSync(<String>[
+      processManager.runSync(<String>[
         flutterBin,
         ...getLocalEngineArguments(),
         'create',
@@ -69,7 +65,6 @@ void main() {
         'plugin',
         'hello',
       ], workingDirectory: tempDir.path);
-      expect(result, const ProcessResultMatcher());
 
       pluginRoot = tempDir.childDirectory('hello');
       projectRoot = pluginRoot.childDirectory('example').path;

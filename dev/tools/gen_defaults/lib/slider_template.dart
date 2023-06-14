@@ -15,7 +15,7 @@ class SliderTemplate extends TokenTemplate {
   String generate() => '''
 class _${blockName}DefaultsM3 extends SliderThemeData {
   _${blockName}DefaultsM3(this.context)
-    : super(trackHeight: ${getToken('$tokenGroup.active.track.height')});
+    : super(trackHeight: ${tokens['$tokenGroup.active.track.height']});
 
   final BuildContext context;
   late final ColorScheme _colors = Theme.of(context).colorScheme;

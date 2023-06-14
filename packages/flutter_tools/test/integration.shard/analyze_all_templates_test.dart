@@ -9,7 +9,6 @@ import 'package:flutter_tools/src/globals.dart' as globals;
 import '../src/common.dart';
 import '../src/context.dart';
 import '../src/test_flutter_command_runner.dart';
-import 'test_utils.dart';
 
 void main() {
   group('pass analyze template:', () {
@@ -39,7 +38,7 @@ void main() {
         final ProcessResult result = await globals.processManager
             .run(<String>['flutter', 'analyze'], workingDirectory: projectPath);
 
-        expect(result, const ProcessResultMatcher());
+        expect(result.exitCode, 0);
       });
     }
   });

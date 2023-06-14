@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+
 import '../base/common.dart';
 import '../base/file_system.dart';
 import '../base/logger.dart';
@@ -13,6 +14,7 @@ import 'analyze_base.dart';
 class AnalyzeOnce extends AnalyzeBase {
   AnalyzeOnce(
     super.argResults,
+    List<String> repoRoots,
     List<Directory> repoPackages, {
     required super.fileSystem,
     required super.logger,
@@ -23,6 +25,7 @@ class AnalyzeOnce extends AnalyzeBase {
     required super.suppressAnalytics,
     this.workingDirectory,
   }) : super(
+        repoRoots: repoRoots,
         repoPackages: repoPackages,
       );
 
@@ -39,7 +42,7 @@ class AnalyzeOnce extends AnalyzeBase {
       // check for conflicting dependencies
       final PackageDependencyTracker dependencies = PackageDependencyTracker();
       dependencies.checkForConflictingDependencies(repoPackages, dependencies);
-      items.add(flutterRoot);
+      items.addAll(repoRoots);
       if (argResults.wasParsed('current-package') && (argResults['current-package'] as bool)) {
         items.add(currentDirectory);
       }

@@ -76,7 +76,6 @@ void main() {
         cpuArchitecture: DarwinArch.arm64,
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
       expect(device.isSupported(), isTrue);
     });
@@ -94,7 +93,6 @@ void main() {
         cpuArchitecture: DarwinArch.armv7,
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
       expect(device.isSupported(), isFalse);
     });
@@ -113,7 +111,6 @@ void main() {
         sdkVersion: '1.0.0',
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       ).majorSdkVersion, 1);
       expect(IOSDevice(
         'device-123',
@@ -128,7 +125,6 @@ void main() {
         sdkVersion: '13.1.1',
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       ).majorSdkVersion, 13);
       expect(IOSDevice(
         'device-123',
@@ -143,7 +139,6 @@ void main() {
         sdkVersion: '10',
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       ).majorSdkVersion, 10);
       expect(IOSDevice(
         'device-123',
@@ -158,7 +153,6 @@ void main() {
         sdkVersion: '0',
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       ).majorSdkVersion, 0);
       expect(IOSDevice(
         'device-123',
@@ -173,7 +167,6 @@ void main() {
         sdkVersion: 'bogus',
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       ).majorSdkVersion, 0);
     });
 
@@ -191,7 +184,6 @@ void main() {
         cpuArchitecture: DarwinArch.arm64,
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
 
       expect(await device.sdkNameAndVersion,'iOS 13.3 17C54');
@@ -211,7 +203,6 @@ void main() {
         cpuArchitecture: DarwinArch.arm64,
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
 
       expect(device.supportsRuntimeMode(BuildMode.debug), true);
@@ -237,7 +228,6 @@ void main() {
               cpuArchitecture: DarwinArch.arm64,
               connectionInterface: DeviceConnectionInterface.attached,
               isConnected: true,
-              devModeEnabled: true,
             );
           },
           throwsAssertionError,
@@ -329,7 +319,6 @@ void main() {
           cpuArchitecture: DarwinArch.arm64,
           connectionInterface: DeviceConnectionInterface.attached,
           isConnected: true,
-          devModeEnabled: true,
         );
         logReader1 = createLogReader(device, appPackage1, process1);
         logReader2 = createLogReader(device, appPackage2, process2);
@@ -392,7 +381,6 @@ void main() {
         fileSystem: MemoryFileSystem.test(),
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
 
       device2 = IOSDevice(
@@ -408,7 +396,6 @@ void main() {
         fileSystem: MemoryFileSystem.test(),
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: true,
-        devModeEnabled: true,
       );
     });
 
@@ -700,7 +687,6 @@ void main() {
         fileSystem: MemoryFileSystem.test(),
         connectionInterface: DeviceConnectionInterface.attached,
         isConnected: false,
-        devModeEnabled: true,
       );
     });
 

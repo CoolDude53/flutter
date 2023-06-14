@@ -48,17 +48,15 @@ class MacOSDevice extends DesktopDevice {
   String get name => 'macOS';
 
   @override
-  bool get supportsImpeller => true;
-
-  @override
   Future<TargetPlatform> get targetPlatform async => TargetPlatform.darwin;
 
   @override
   Future<String> get targetPlatformDisplayName async {
     if (_operatingSystemUtils.hostPlatform == HostPlatform.darwin_arm64) {
       return 'darwin-arm64';
+    } else {
+      return 'darwin-x64';
     }
-    return 'darwin-x64';
   }
 
   @override

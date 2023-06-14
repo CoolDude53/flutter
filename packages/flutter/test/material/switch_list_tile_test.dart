@@ -118,32 +118,27 @@ void main() {
 
   testWidgets('SwitchListTile has the right colors', (WidgetTester tester) async {
     bool value = false;
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
     await tester.pumpWidget(
       MediaQuery(
         data: const MediaQueryData(padding: EdgeInsets.all(8.0)),
-        child: Theme(
-          data: theme,
-          child: Directionality(
-          textDirection: TextDirection.ltr,
-          child:
-            StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return Material(
-                  child: SwitchListTile(
-                    value: value,
-                    onChanged: (bool newValue) {
-                      setState(() { value = newValue; });
-                    },
-                    activeColor: Colors.red[500],
-                    activeTrackColor: Colors.green[500],
-                    inactiveThumbColor: Colors.yellow[500],
-                    inactiveTrackColor: Colors.blue[500],
-                  ),
-                );
-              },
-            ),
+        child: Directionality(
+        textDirection: TextDirection.ltr,
+        child:
+          StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Material(
+                child: SwitchListTile(
+                  value: value,
+                  onChanged: (bool newValue) {
+                    setState(() { value = newValue; });
+                  },
+                  activeColor: Colors.red[500],
+                  activeTrackColor: Colors.green[500],
+                  inactiveThumbColor: Colors.yellow[500],
+                  inactiveTrackColor: Colors.blue[500],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -151,17 +146,12 @@ void main() {
 
     expect(
       find.byType(Switch),
-      material3
-        ? (paints
-          ..rrect(color: Colors.blue[500])
-          ..rrect()
-          ..rrect(color: Colors.yellow[500]))
-        : (paints
-          ..rrect(color: Colors.blue[500])
-          ..rrect(color: const Color(0x33000000))
-          ..rrect(color: const Color(0x24000000))
-          ..rrect(color: const Color(0x1f000000))
-          ..rrect(color: Colors.yellow[500])),
+      paints
+        ..rrect(color: Colors.blue[500])
+        ..rrect(color: const Color(0x33000000))
+        ..rrect(color: const Color(0x24000000))
+        ..rrect(color: const Color(0x1f000000))
+        ..rrect(color: Colors.yellow[500]),
     );
 
     await tester.tap(find.byType(Switch));
@@ -169,17 +159,12 @@ void main() {
 
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints
-          ..rrect(color: Colors.green[500])
-          ..rrect()
-          ..rrect(color: Colors.red[500]))
-        : (paints
-          ..rrect(color: Colors.green[500])
-          ..rrect(color: const Color(0x33000000))
-          ..rrect(color: const Color(0x24000000))
-          ..rrect(color: const Color(0x1f000000))
-          ..rrect(color: Colors.red[500])),
+      paints
+        ..rrect(color: Colors.green[500])
+        ..rrect(color: const Color(0x33000000))
+        ..rrect(color: const Color(0x24000000))
+        ..rrect(color: const Color(0x1f000000))
+        ..rrect(color: Colors.red[500]),
     );
   });
 
@@ -601,7 +586,7 @@ void main() {
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return Container(
-              width: 500,
+              width: 100,
               height: 100,
               color: Colors.white,
               child: SwitchListTile(
@@ -628,7 +613,7 @@ void main() {
       Material.of(tester.element(find.byKey(key))),
       paints..rect()..rect(
         color: Colors.orange[500],
-        rect: const Rect.fromLTRB(150.0, 250.0, 650.0, 350.0),
+        rect: const Rect.fromLTRB(350.0, 250.0, 450.0, 350.0),
       )
     );
   });
@@ -638,8 +623,6 @@ void main() {
     const Color activeDisabledThumbColor = Color(0xFF000002);
     const Color inactiveEnabledThumbColor = Color(0xFF000003);
     const Color inactiveDisabledThumbColor = Color(0xFF000004);
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
 
     Color getThumbColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.disabled)) {
@@ -672,19 +655,19 @@ void main() {
     await tester.pumpWidget(buildSwitchListTile(enabled: false, selected: false));
     await tester.pumpAndSettle();
     expect(
-      Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: inactiveDisabledThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: inactiveDisabledThumbColor)),
+        Material.of(tester.element(find.byType(Switch))),
+        paints
+          ..rrect()..rrect()..rrect()..rrect()
+          ..rrect(color: inactiveDisabledThumbColor),
     );
 
     await tester.pumpWidget(buildSwitchListTile(enabled: false, selected: true));
     await tester.pumpAndSettle();
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: activeDisabledThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: activeDisabledThumbColor)),
+      paints
+        ..rrect()..rrect()..rrect()..rrect()
+        ..rrect(color: activeDisabledThumbColor),
     );
 
     await tester.pumpWidget(buildSwitchListTile(enabled: true, selected: false));
@@ -692,9 +675,9 @@ void main() {
 
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: inactiveEnabledThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: inactiveEnabledThumbColor)),
+      paints
+        ..rrect()..rrect()..rrect()..rrect()
+        ..rrect(color: inactiveEnabledThumbColor),
     );
 
     await tester.pumpWidget(buildSwitchListTile(enabled: true, selected: true));
@@ -702,9 +685,9 @@ void main() {
 
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: activeEnabledThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: activeEnabledThumbColor)),
+      paints
+        ..rrect()..rrect()..rrect()..rrect()
+        ..rrect(color: activeEnabledThumbColor),
     );
   });
 
@@ -712,8 +695,6 @@ void main() {
     tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
     const Color hoveredThumbColor = Color(0xFF4caf50);
     const Color pressedThumbColor = Color(0xFFF44336);
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
 
     Color getThumbColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
@@ -729,7 +710,7 @@ void main() {
 
     Widget buildSwitchListTile() {
       return MaterialApp(
-        theme: theme,
+        theme: ThemeData(),
         home: wrap(
           child: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
@@ -754,9 +735,9 @@ void main() {
 
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: hoveredThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: hoveredThumbColor)),
+      paints
+        ..rrect()..rrect()..rrect()..rrect()
+        ..rrect(color: hoveredThumbColor),
     );
 
     // On pressed state
@@ -764,9 +745,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       Material.of(tester.element(find.byType(Switch))),
-      material3
-        ? (paints..rrect()..rrect()..rrect(color: pressedThumbColor))
-        : (paints..rrect()..rrect()..rrect()..rrect()..rrect(color: pressedThumbColor)),
+      paints
+        ..rrect()..rrect()..rrect()..rrect()
+        ..rrect(color: pressedThumbColor),
     );
   });
 
@@ -962,33 +943,28 @@ void main() {
   });
 
   testWidgets('SwitchListTile respects materialTapTargetSize', (WidgetTester tester) async {
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
     Widget buildSwitchListTile(MaterialTapTargetSize materialTapTargetSize) {
-      return MaterialApp(
-        theme: theme,
-        home: Material(
-          child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return SwitchListTile(
-                materialTapTargetSize: materialTapTargetSize,
-                value: false,
-                onChanged: (_) {},
-              );
-            }),
-        ),
+      return wrap(
+        child: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SwitchListTile(
+              materialTapTargetSize: materialTapTargetSize,
+              value: false,
+              onChanged: (_) {},
+            );
+          }),
       );
     }
 
     await tester.pumpWidget(buildSwitchListTile(MaterialTapTargetSize.padded));
     final Switch switchWidget = tester.widget<Switch>(find.byType(Switch));
     expect(switchWidget.materialTapTargetSize, MaterialTapTargetSize.padded);
-    expect(tester.getSize(find.byType(Switch)), material3 ? const Size(60.0, 48.0) : const Size(59.0, 48.0));
+    expect(tester.getSize(find.byType(Switch)), const Size(59.0, 48.0));
 
     await tester.pumpWidget(buildSwitchListTile(MaterialTapTargetSize.shrinkWrap));
     final Switch switchWidget1 = tester.widget<Switch>(find.byType(Switch));
     expect(switchWidget1.materialTapTargetSize, MaterialTapTargetSize.shrinkWrap);
-    expect(tester.getSize(find.byType(Switch)), material3 ? const Size(60.0, 40.0) : const Size(59.0, 40.0));
+    expect(tester.getSize(find.byType(Switch)), const Size(59.0, 40.0));
   });
 
   testWidgets('SwitchListTile.adaptive respects applyCupertinoTheme', (WidgetTester tester) async {
@@ -1029,33 +1005,28 @@ void main() {
   });
 
   testWidgets('SwitchListTile respects materialTapTargetSize', (WidgetTester tester) async {
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
     Widget buildSwitchListTile(MaterialTapTargetSize materialTapTargetSize) {
-      return MaterialApp(
-        theme: theme,
-        home: Material(
-          child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return SwitchListTile(
-                materialTapTargetSize: materialTapTargetSize,
-                value: false,
-                onChanged: (_) {},
-              );
-            }),
-        ),
+      return wrap(
+        child: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SwitchListTile(
+              materialTapTargetSize: materialTapTargetSize,
+              value: false,
+              onChanged: (_) {},
+            );
+          }),
       );
     }
 
     await tester.pumpWidget(buildSwitchListTile(MaterialTapTargetSize.padded));
     final Switch switchWidget = tester.widget<Switch>(find.byType(Switch));
     expect(switchWidget.materialTapTargetSize, MaterialTapTargetSize.padded);
-    expect(tester.getSize(find.byType(Switch)), material3 ? const Size(60.0, 48.0) : const Size(59.0, 48.0));
+    expect(tester.getSize(find.byType(Switch)), const Size(59.0, 48.0));
 
     await tester.pumpWidget(buildSwitchListTile(MaterialTapTargetSize.shrinkWrap));
     final Switch switchWidget1 = tester.widget<Switch>(find.byType(Switch));
     expect(switchWidget1.materialTapTargetSize, MaterialTapTargetSize.shrinkWrap);
-    expect(tester.getSize(find.byType(Switch)), material3 ? const Size(60.0, 40.0) : const Size(59.0, 40.0));
+    expect(tester.getSize(find.byType(Switch)), const Size(59.0, 40.0));
   });
 
   testWidgets('SwitchListTile passes the value of dragStartBehavior to Switch', (WidgetTester tester) async {

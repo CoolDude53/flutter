@@ -24,13 +24,10 @@ void main() {
     TextButton secondButton = findButton('Banana');
     TextButton thirdButton = findButton('Orange');
 
-    const Color selectedColor = Color(0xffef9a9a);
-    const Color unselectedColor = Color(0x00fffbfe);
-
     /// First button is selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0xffef9a9a));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
 
     /// Tap on second button.
     await tester.tap(find.widgetWithText(TextButton, 'Banana'));
@@ -41,9 +38,9 @@ void main() {
     thirdButton = findButton('Orange');
 
     /// Only second button is selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0xffef9a9a));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
   });
 
   testWidgets('Multi-select ToggleButtons', (WidgetTester tester) async {
@@ -62,13 +59,10 @@ void main() {
     TextButton secondButton = findButton('Potatoes');
     TextButton thirdButton = findButton('Carrots');
 
-    const Color selectedColor = Color(0xffa5d6a7);
-    const Color unselectedColor = Color(0x00fffbfe);
-
     /// Second button is selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0xffa5d6a7));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
 
     /// Tap on other two buttons.
     await tester.tap(find.widgetWithText(TextButton, 'Tomatoes'));
@@ -80,9 +74,9 @@ void main() {
     thirdButton = findButton('Carrots');
 
     /// All buttons are selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), selectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0xffa5d6a7));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0xffa5d6a7));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0xffa5d6a7));
   });
 
   testWidgets('Icon-only ToggleButtons', (WidgetTester tester) async {
@@ -101,14 +95,10 @@ void main() {
     TextButton secondButton = findButton(Icons.cloud);
     TextButton thirdButton = findButton(Icons.ac_unit);
 
-    const Color selectedColor =  Color(0xff90caf9);
-    const Color unselectedColor = Color(0x00fffbfe);
-
-
     /// Third button is selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), selectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0xff90caf9));
 
     /// Tap on the first button.
     await tester.tap(find.widgetWithIcon(TextButton, Icons.sunny));
@@ -119,9 +109,9 @@ void main() {
     thirdButton = findButton(Icons.ac_unit);
 
     /// First button os selected.
-    expect(firstButton.style!.backgroundColor!.resolve(enabled), selectedColor);
-    expect(secondButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
-    expect(thirdButton.style!.backgroundColor!.resolve(enabled), unselectedColor);
+    expect(firstButton.style!.backgroundColor!.resolve(enabled), const Color(0xff90caf9));
+    expect(secondButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
+    expect(thirdButton.style!.backgroundColor!.resolve(enabled), const Color(0x00ffffff));
   });
 }
 

@@ -829,7 +829,6 @@ void main() {
         ShowValueIndicator show = ShowValueIndicator.onlyForDiscrete,
       }) {
         return MaterialApp(
-          theme: ThemeData(useMaterial3: false),
           home: Directionality(
             textDirection: TextDirection.ltr,
             child: StatefulBuilder(
@@ -2126,29 +2125,17 @@ void main() {
 
   testWidgets('Slider can be incremented and decremented by keyboard shortcuts - LTR', (WidgetTester tester) async {
     tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-    double startValue = 0.0;
-    double currentValue = 0.5;
-    double endValue = 0.0;
+    double value = 0.5;
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
           child: Center(
             child: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
               return Slider(
-                value: currentValue,
-                onChangeStart: (double newValue) {
-                  setState(() {
-                    startValue = newValue;
-                  });
-                },
+                value: value,
                 onChanged: (double newValue) {
                   setState(() {
-                    currentValue = newValue;
-                  });
-                },
-                onChangeEnd: (double newValue) {
-                  setState(() {
-                    endValue = newValue;
+                    value = newValue;
                   });
                 },
                 autofocus: true,
@@ -2162,54 +2149,34 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.55);
-    expect(endValue, 0.55);
+    expect(value, 0.55);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.pumpAndSettle();
-    expect(startValue, 0.55);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.55);
-    expect(endValue, 0.55);
+    expect(value, 0.55);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.pumpAndSettle();
-    expect(startValue, 0.55);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
   }, variant: const TargetPlatformVariant(<TargetPlatform>{ TargetPlatform.android,  TargetPlatform.fuchsia, TargetPlatform.linux, TargetPlatform.windows }));
 
   testWidgets('Slider can be incremented and decremented by keyboard shortcuts - LTR', (WidgetTester tester) async {
     tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-    double startValue = 0.0;
-    double currentValue = 0.5;
-    double endValue = 0.0;
+    double value = 0.5;
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
           child: Center(
             child: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
               return Slider(
-                value: currentValue,
-                onChangeStart: (double newValue) {
-                  setState(() {
-                    startValue = newValue;
-                  });
-                },
+                value: value,
                 onChanged: (double newValue) {
                   setState(() {
-                    currentValue = newValue;
-                  });
-                },
-                onChangeEnd: (double newValue) {
-                  setState(() {
-                    endValue = newValue;
+                    value = newValue;
                   });
                 },
                 autofocus: true,
@@ -2223,34 +2190,24 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.6);
-    expect(endValue, 0.6);
+    expect(value, 0.6);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.pumpAndSettle();
-    expect(startValue, 0.6);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.6);
-    expect(endValue, 0.6);
+    expect(value, 0.6);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.pumpAndSettle();
-    expect(startValue, 0.6);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
   }, variant: const TargetPlatformVariant(<TargetPlatform>{ TargetPlatform.iOS,  TargetPlatform.macOS }));
 
   testWidgets('Slider can be incremented and decremented by keyboard shortcuts - RTL', (WidgetTester tester) async {
     tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-    double startValue = 0.0;
-    double currentValue = 0.5;
-    double endValue = 0.0;
+    double value = 0.5;
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
@@ -2259,20 +2216,10 @@ void main() {
               return Directionality(
                 textDirection: TextDirection.rtl,
                 child: Slider(
-                  value: currentValue,
-                  onChangeStart: (double newValue) {
-                    setState(() {
-                      startValue = newValue;
-                    });
-                  },
+                  value: value,
                   onChanged: (double newValue) {
                     setState(() {
-                      currentValue = newValue;
-                    });
-                  },
-                  onChangeEnd: (double newValue) {
-                    setState(() {
-                      endValue = newValue;
+                      value = newValue;
                     });
                   },
                   autofocus: true,
@@ -2287,34 +2234,24 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.45);
-    expect(endValue, 0.45);
+    expect(value, 0.45);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.pumpAndSettle();
-    expect(startValue, 0.45);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.55);
-    expect(endValue, 0.55);
+    expect(value, 0.55);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.pumpAndSettle();
-    expect(startValue, 0.55);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
   }, variant: const TargetPlatformVariant(<TargetPlatform>{ TargetPlatform.android,  TargetPlatform.fuchsia, TargetPlatform.linux, TargetPlatform.windows }));
 
   testWidgets('Slider can be incremented and decremented by keyboard shortcuts - RTL', (WidgetTester tester) async {
     tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-    double startValue = 0.0;
-    double currentValue = 0.5;
-    double endValue = 0.0;
+    double value = 0.5;
     await tester.pumpWidget(
       MaterialApp(
         home: Material(
@@ -2323,20 +2260,10 @@ void main() {
               return Directionality(
                 textDirection: TextDirection.rtl,
                 child: Slider(
-                  value: currentValue,
-                  onChangeStart: (double newValue) {
-                    setState(() {
-                      startValue = newValue;
-                    });
-                  },
+                  value: value,
                   onChanged: (double newValue) {
                     setState(() {
-                      currentValue = newValue;
-                    });
-                  },
-                  onChangeEnd: (double newValue) {
-                    setState(() {
-                      endValue = newValue;
+                      value = newValue;
                     });
                   },
                   autofocus: true,
@@ -2351,27 +2278,19 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.4);
-    expect(endValue, 0.4);
+    expect(value, 0.4);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.pumpAndSettle();
-    expect(startValue, 0.4);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
     await tester.pumpAndSettle();
-    expect(startValue, 0.5);
-    expect(currentValue, 0.6);
-    expect(endValue, 0.6);
+    expect(value, 0.6);
 
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
     await tester.pumpAndSettle();
-    expect(startValue, 0.6);
-    expect(currentValue, 0.5);
-    expect(endValue, 0.5);
+    expect(value, 0.5);
   }, variant: const TargetPlatformVariant(<TargetPlatform>{ TargetPlatform.iOS,  TargetPlatform.macOS }));
 
   testWidgets('In directional nav, Slider can be navigated out of by using up and down arrows', (WidgetTester tester) async {
@@ -2671,7 +2590,6 @@ void main() {
       bool enabled = true,
     }) {
       return MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: Scaffold(
           body: Builder(
             // The builder is used to pass the context from the MaterialApp widget
@@ -3509,56 +3427,6 @@ void main() {
     );
   }, variant: TargetPlatformVariant.desktop());
 
-  testWidgets('Value indicator disappears after adjusting the slider', (WidgetTester tester) async {
-    // This is a regression test for https://github.com/flutter/flutter/issues/123313.
-    final ThemeData theme = ThemeData(useMaterial3: true);
-    const double currentValue = 0.5;
-    await tester.pumpWidget(MaterialApp(
-      theme: theme,
-      home: Material(
-        child: Center(
-          child: Slider(
-            value: currentValue,
-            divisions: 5,
-            label: currentValue.toStringAsFixed(1),
-            onChanged: (double value) {},
-          ),
-        ),
-      ),
-    ));
-
-    // Slider does not show value indicator initially.
-    await tester.pumpAndSettle();
-    RenderBox valueIndicatorBox = tester.renderObject(find.byType(Overlay));
-    expect(
-      valueIndicatorBox,
-      isNot(paints..scale()..path(color: theme.colorScheme.primary)),
-    );
-
-    final Offset sliderCenter = tester.getCenter(find.byType(Slider));
-    final Offset tapLocation = Offset(sliderCenter.dx + 50, sliderCenter.dy);
-
-    // Tap the slider to bring up the value indicator.
-    await tester.tapAt(tapLocation);
-    await tester.pumpAndSettle();
-
-    // Value indicator is visible.
-    valueIndicatorBox = tester.renderObject(find.byType(Overlay));
-    expect(
-      valueIndicatorBox,
-      paints..scale()..path(color: theme.colorScheme.primary),
-    );
-
-    // Wait for the value indicator to disappear.
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    // Value indicator is no longer visible.
-    expect(
-      valueIndicatorBox,
-      isNot(paints..scale()..path(color: theme.colorScheme.primary)),
-    );
-  });
-
   testWidgets('Value indicator remains when Slider is in focus on desktop', (WidgetTester tester) async {
     double value = 0.5;
     final FocusNode focusNode = FocusNode();
@@ -3684,17 +3552,15 @@ void main() {
   });
 
   group('Material 2', () {
-    // These tests are only relevant for Material 2. Once Material 2
-    // support is deprecated and the APIs are removed, these tests
-    // can be deleted.
+    // Tests that are only relevant for Material 2. Once ThemeData.useMaterial3
+    // is turned on by default, these tests can be removed.
 
     testWidgets('Slider can be hovered and has correct hover color', (WidgetTester tester) async {
       tester.binding.focusManager.highlightStrategy = FocusHighlightStrategy.alwaysTraditional;
-      final ThemeData theme = ThemeData(useMaterial3: false);
+      final ThemeData theme = ThemeData();
       double value = 0.5;
       Widget buildApp({bool enabled = true}) {
         return MaterialApp(
-          theme: theme,
           home: Material(
             child: Center(
               child: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {

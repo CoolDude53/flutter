@@ -653,7 +653,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(platform: TargetPlatform.android, useMaterial3: false),
+        theme: ThemeData(platform: TargetPlatform.android),
         home: Scaffold(
           appBar: AppBar(
             title: const Text('Title'),
@@ -818,7 +818,6 @@ void main() {
     // Regression test for https://github.com/flutter/flutter/pull/92039
     await tester.pumpWidget(
       MaterialApp(
-        theme: ThemeData(useMaterial3: false),
         home: MediaQuery(
           data: const MediaQueryData(
             // Representing a navigational notch at the bottom of the screen
@@ -1064,9 +1063,9 @@ void main() {
       late double mediaQueryBottom;
 
       Widget buildFrame({ required bool extendBody, bool? resizeToAvoidBottomInset, double viewInsetBottom = 0.0 }) {
-        return MaterialApp(
-          theme: ThemeData(useMaterial3: false),
-          home: MediaQuery(
+        return Directionality(
+          textDirection: TextDirection.ltr,
+          child: MediaQuery(
             data: MediaQueryData(
               viewInsets: EdgeInsets.only(bottom: viewInsetBottom),
             ),
@@ -2574,7 +2573,7 @@ void main() {
         'MaterialApp at the top of your application widget tree.\n',
       ),
     );
-    expect(error.toStringDeep(), startsWith(
+    expect(error.toStringDeep(), equalsIgnoringHashCodes(
       'FlutterError\n'
       '   No ScaffoldMessenger widget found.\n'
       '   Builder widgets require a ScaffoldMessenger widget ancestor.\n'
@@ -2582,8 +2581,32 @@ void main() {
       '   ancestor was:\n'
       '     Builder\n'
       '   The ancestors of this widget were:\n'
-    ));
-    expect(error.toStringDeep(), endsWith(
+      '     KeyedSubtree-[GlobalKey#00000]\n'
+      '     _BodyBuilder\n'
+      '     MediaQuery\n'
+      '     LayoutId-[<_ScaffoldSlot.body>]\n'
+      '     CustomMultiChildLayout\n'
+      '     _ActionsScope\n'
+      '     Actions\n'
+      '     AnimatedBuilder\n'
+      '     DefaultTextStyle\n'
+      '     AnimatedDefaultTextStyle\n'
+      '     _InkFeatures-[GlobalKey#00000 ink renderer]\n'
+      '     NotificationListener<LayoutChangedNotification>\n'
+      '     PhysicalModel\n'
+      '     AnimatedPhysicalModel\n'
+      '     Material\n'
+      '     _ScrollNotificationObserverScope\n'
+      '     NotificationListener<ScrollNotification>\n'
+      '     NotificationListener<ScrollMetricsNotification>\n'
+      '     ScrollNotificationObserver\n'
+      '     _ScaffoldScope\n'
+      '     Scaffold\n'
+      '     Directionality\n'
+      '     MediaQuery\n'
+      '     _MediaQueryFromView\n'
+      '     _ViewScope\n'
+      '     View-[GlobalObjectKey TestFlutterView#e6136]\n'
       '     [root]\n'
       '   Typically, the ScaffoldMessenger widget is introduced by the\n'
       '   MaterialApp at the top of your application widget tree.\n',
@@ -2826,52 +2849,6 @@ void main() {
     expect(find.byKey(bottomSheetKey2), findsNothing);
 
     expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('showBottomSheet removes scrim when draggable sheet is dismissed', (WidgetTester tester) async {
-    final DraggableScrollableController draggableController = DraggableScrollableController();
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-    PersistentBottomSheetController<void>? sheetController;
-
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        key: scaffoldKey,
-        body: const Center(child: Text('body')),
-      ),
-    ));
-
-    sheetController = scaffoldKey.currentState!.showBottomSheet<void>((_) {
-      return DraggableScrollableSheet(
-        expand: false,
-        controller: draggableController,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            child: const Placeholder(),
-          );
-        },
-      );
-    });
-
-    Finder findModalBarrier() => find.descendant(of: find.byType(Scaffold), matching: find.byType(ModalBarrier));
-
-    await tester.pump();
-    expect(find.byType(BottomSheet), findsOneWidget);
-
-    // The scrim is not present yet.
-    expect(findModalBarrier(), findsNothing);
-
-    // Expand the sheet to 80% of parent height to show the scrim.
-    draggableController.jumpTo(0.8);
-    await tester.pump();
-    expect(findModalBarrier(), findsOneWidget);
-
-    // Dismiss the sheet.
-    sheetController.close();
-    await tester.pumpAndSettle();
-
-    // The scrim should be gone.
-    expect(findModalBarrier(), findsNothing);
   });
 }
 

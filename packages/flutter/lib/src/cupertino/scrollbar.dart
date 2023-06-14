@@ -53,7 +53,8 @@ const double _kScrollbarCrossAxisMargin = 3.0;
 /// {@tool dartpad}
 /// When [thumbVisibility] is true, the scrollbar thumb will remain visible without the
 /// fade animation. This requires that a [ScrollController] is provided to controller,
-/// or that the [PrimaryScrollController] is available.
+/// or that the [PrimaryScrollController] is available. [isAlwaysShown] is
+/// deprecated in favor of `thumbVisibility`.
 ///
 /// ** See code in examples/api/lib/cupertino/scrollbar/cupertino_scrollbar.1.dart **
 /// {@end-tool}
@@ -81,10 +82,20 @@ class CupertinoScrollbar extends RawScrollbar {
     this.radiusWhileDragging = defaultRadiusWhileDragging,
     ScrollNotificationPredicate? notificationPredicate,
     super.scrollbarOrientation,
+    @Deprecated(
+      'Use thumbVisibility instead. '
+      'This feature was deprecated after v2.9.0-1.0.pre.',
+    )
+    bool? isAlwaysShown,
   }) : assert(thickness < double.infinity),
        assert(thicknessWhileDragging < double.infinity),
+       assert(
+         isAlwaysShown == null || thumbVisibility == null,
+         'Scrollbar thumb appearance should only be controlled with thumbVisibility, '
+         'isAlwaysShown is deprecated.'
+       ),
        super(
-         thumbVisibility: thumbVisibility ?? false,
+         thumbVisibility: isAlwaysShown ?? thumbVisibility ?? false,
          fadeDuration: _kScrollbarFadeDuration,
          timeToFade: _kScrollbarTimeToFade,
          pressDuration: const Duration(milliseconds: 100),

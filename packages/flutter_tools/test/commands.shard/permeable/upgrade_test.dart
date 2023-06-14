@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:file/memory.dart';
 import 'package:flutter_tools/src/base/file_system.dart';
 import 'package:flutter_tools/src/base/io.dart';
 import 'package:flutter_tools/src/base/platform.dart';
@@ -47,7 +46,7 @@ void main() {
     });
 
     testUsingContext('throws on unknown tag, official branch,  noforce', () async {
-      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta');
+      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta');
       const String upstreamRevision = '';
       final FakeFlutterVersion latestVersion = FakeFlutterVersion(frameworkRevision: upstreamRevision);
       fakeCommandRunner.remoteVersion = latestVersion;
@@ -67,7 +66,7 @@ void main() {
     });
 
     testUsingContext('throws tool exit with uncommitted changes', () async {
-      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta');
+      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta');
       const String upstreamRevision = '';
       final FakeFlutterVersion latestVersion = FakeFlutterVersion(frameworkRevision: upstreamRevision);
       fakeCommandRunner.remoteVersion = latestVersion;
@@ -90,7 +89,7 @@ void main() {
     testUsingContext("Doesn't continue on known tag, beta branch, no force, already up-to-date", () async {
       const String revision = 'abc123';
       final FakeFlutterVersion latestVersion = FakeFlutterVersion(frameworkRevision: revision);
-      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta', frameworkRevision: revision);
+      final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta', frameworkRevision: revision);
       fakeCommandRunner.alreadyUpToDate = true;
       fakeCommandRunner.remoteVersion = latestVersion;
 
@@ -117,7 +116,7 @@ void main() {
       const String upstreamVersion = '4.5.6';
 
       final FakeFlutterVersion flutterVersion = FakeFlutterVersion(
-        branch: 'beta',
+        channel: 'beta',
         frameworkRevision: revision,
         frameworkRevisionShort: revision,
         frameworkVersion: version,
@@ -288,7 +287,7 @@ void main() {
       const String upstreamVersion = '4.5.6';
 
       final FakeFlutterVersion flutterVersion = FakeFlutterVersion(
-        branch: 'beta',
+        channel: 'beta',
         frameworkRevision: revision,
         frameworkVersion: version,
       );
@@ -328,7 +327,7 @@ void main() {
           environment: <String, String>{'FLUTTER_ALREADY_LOCKED': 'true', ...fakePlatform.environment}
         ),
       );
-      await precacheArtifacts();
+      await realCommandRunner.precacheArtifacts();
       expect(processManager, hasNoRemainingExpectations);
     }, overrides: <Type, Generator>{
       ProcessManager: () => processManager,
@@ -349,7 +348,7 @@ void main() {
 
       testUsingContext('does not throw on unknown tag, official branch, force', () async {
         fakeCommandRunner.remoteVersion = FakeFlutterVersion(frameworkRevision: '1234');
-        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta');
+        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta');
 
         final Future<FlutterCommandResult> result = fakeCommandRunner.runCommand(
           force: true,
@@ -367,7 +366,7 @@ void main() {
       });
 
       testUsingContext('does not throw tool exit with uncommitted changes and force', () async {
-        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta');
+        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta');
         fakeCommandRunner.remoteVersion = FakeFlutterVersion(frameworkRevision: '1234');
         fakeCommandRunner.willHaveUncommittedChanges = true;
 
@@ -387,7 +386,7 @@ void main() {
       });
 
       testUsingContext("Doesn't throw on known tag, beta branch, no force", () async {
-        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(branch: 'beta');
+        final FakeFlutterVersion flutterVersion = FakeFlutterVersion(channel: 'beta');
         fakeCommandRunner.remoteVersion = FakeFlutterVersion(frameworkRevision: '1234');
 
         final Future<FlutterCommandResult> result = fakeCommandRunner.runCommand(
@@ -409,7 +408,6 @@ void main() {
         late FakeProcessManager fakeProcessManager;
         late Directory tempDir;
         late File flutterToolState;
-        late FileSystem fs;
 
         setUp(() {
           Cache.disableLocking();
@@ -426,8 +424,7 @@ void main() {
               stdout: 'v1.12.16-19-gb45b676af',
             ),
           ]);
-          fs = MemoryFileSystem.test();
-          tempDir = fs.systemTempDirectory.createTempSync('flutter_upgrade_test.');
+          tempDir = globals.fs.systemTempDirectory.createTempSync('flutter_upgrade_test.');
           flutterToolState = tempDir.childFile('.flutter_tool_state');
         });
 
@@ -437,7 +434,6 @@ void main() {
         });
 
         testUsingContext('upgrade continue prints welcome message', () async {
-          fakeProcessManager = FakeProcessManager.any();
           final UpgradeCommand upgradeCommand = UpgradeCommand(
             verboseHelp: false,
             commandRunner: fakeCommandRunner,
@@ -455,7 +451,6 @@ void main() {
             containsPair('redisplay-welcome-message', true),
           );
         }, overrides: <Type, Generator>{
-          FileSystem: () => fs,
           FlutterVersion: () => FakeFlutterVersion(),
           ProcessManager: () => fakeProcessManager,
           PersistentToolState: () => PersistentToolState.test(
@@ -483,6 +478,9 @@ class FakeUpgradeCommandRunner extends UpgradeCommandRunner {
 
   @override
   Future<void> attemptReset(String newRevision) async {}
+
+  @override
+  Future<void> precacheArtifacts() async {}
 
   @override
   Future<void> updatePackages(FlutterVersion flutterVersion) async {}

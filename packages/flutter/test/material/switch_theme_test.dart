@@ -358,7 +358,7 @@ void main() {
       ? (paints
         ..rrect(color: defaultTrackColor)
         ..rrect(color: defaultOutlineColor, strokeWidth: defaultOutlineWidth)
-        ..rrect(color: defaultThumbColor)..paragraph(offset: const Offset(12, 12)))
+        ..rrect(color: defaultThumbColor)..paragraph(offset: const Offset(12, 16)))
       : (paints
         ..rrect(color: defaultTrackColor)
         ..rrect(color: defaultOutlineColor, strokeWidth: defaultOutlineWidth)
@@ -475,7 +475,6 @@ void main() {
       material3
       ? (paints
         ..rrect(color: selectedTrackColor)
-        ..rrect()
         ..rrect(color: selectedThumbColor))
       : (paints
         ..rrect(color: selectedTrackColor)

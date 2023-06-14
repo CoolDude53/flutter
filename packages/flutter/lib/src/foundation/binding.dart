@@ -221,12 +221,11 @@ abstract class BindingBase {
   /// [BindingBase], e.g., [ServicesBinding], [RendererBinding], and
   /// [WidgetsBinding]. Each of these bindings define behaviors that interact
   /// with a [ui.PlatformDispatcher], e.g., [ServicesBinding] registers
-  /// listeners with the [ChannelBuffers], [RendererBinding]
+  /// listeners with the [ChannelBuffers], and [RendererBinding]
   /// registers [ui.PlatformDispatcher.onMetricsChanged],
-  /// [ui.PlatformDispatcher.onTextScaleFactorChanged], and [SemanticsBinding]
-  /// registers [ui.PlatformDispatcher.onSemanticsEnabledChanged],
-  /// [ui.PlatformDispatcher.onSemanticsActionEvent], and
-  /// [ui.PlatformDispatcher.onAccessibilityFeaturesChanged] handlers.
+  /// [ui.PlatformDispatcher.onTextScaleFactorChanged],
+  /// [ui.PlatformDispatcher.onSemanticsEnabledChanged], and
+  /// [ui.PlatformDispatcher.onSemanticsAction] handlers.
   ///
   /// Each of these other bindings could individually access a
   /// [ui.PlatformDispatcher] statically, but that would preclude the ability to

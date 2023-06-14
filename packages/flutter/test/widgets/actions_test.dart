@@ -863,10 +863,10 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: FocusableActionDetector(
-              child: ElevatedButton(
-                onPressed: () {},
+              child: MaterialButton(
                 focusNode: buttonNode,
                 child: const Text('Test'),
+                onPressed: () {},
               ),
             ),
           ),
@@ -882,10 +882,10 @@ void main() {
           MaterialApp(
             home: FocusableActionDetector(
               descendantsAreFocusable: false,
-              child: ElevatedButton(
-                onPressed: () {},
+              child: MaterialButton(
                 focusNode: buttonNode,
                 child: const Text('Test'),
+                onPressed: () {},
               ),
             ),
           ),
@@ -910,15 +910,15 @@ void main() {
             home: FocusableActionDetector(
               child: Column(
                 children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {},
+                  MaterialButton(
                     focusNode: buttonNode1,
                     child: const Text('Node 1'),
-                  ),
-                  ElevatedButton(
                     onPressed: () {},
+                  ),
+                  MaterialButton(
                     focusNode: buttonNode2,
                     child: const Text('Node 2'),
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -941,15 +941,15 @@ void main() {
               descendantsAreTraversable: false,
               child: Column(
                 children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {},
+                  MaterialButton(
                     focusNode: buttonNode1,
                     child: const Text('Node 1'),
-                  ),
-                  ElevatedButton(
                     onPressed: () {},
+                  ),
+                  MaterialButton(
                     focusNode: buttonNode2,
                     child: const Text('Node 2'),
+                    onPressed: () {},
                   ),
                 ],
               ),

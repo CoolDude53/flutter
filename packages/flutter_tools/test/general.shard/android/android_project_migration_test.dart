@@ -6,6 +6,7 @@ import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:flutter_tools/src/android/android_studio.dart';
 import 'package:flutter_tools/src/android/gradle_utils.dart';
+import 'package:flutter_tools/src/android/java.dart';
 import 'package:flutter_tools/src/android/migrations/android_studio_java_gradle_conflict_migration.dart';
 import 'package:flutter_tools/src/android/migrations/top_level_gradle_build_file_migration.dart';
 import 'package:flutter_tools/src/base/logger.dart';
@@ -46,8 +47,8 @@ zipStorePath=wrapper/dists
 
 final Version androidStudioDolphin = Version(2021, 3, 1);
 
-const Version _javaVersion17 = Version.withText(17, 0, 2, 'openjdk 17.0.2');
-const Version _javaVersion16 = Version.withText(16, 0, 2, 'openjdk 16.0.2');
+final JavaVersion _javaVersion17 = JavaVersion(longText: 'openjdk 17.0.2', number: '17.0.2');
+final JavaVersion _javaVersion16 = JavaVersion(longText: 'openjdk 16.0.2', number: '16.0.2');
 
 void main() {
   group('Android migration', () {
@@ -283,7 +284,7 @@ class FakeAndroidStudio extends Fake implements AndroidStudio {
 
 class FakeErroringJava extends FakeJava {
   @override
-  Version get version {
+  JavaVersion get version {
     throw Exception('How did this happen?');
   }
 }

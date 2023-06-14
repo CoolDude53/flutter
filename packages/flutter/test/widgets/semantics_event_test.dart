@@ -47,15 +47,6 @@ void main() {
       },
     );
   });
-  test('FocusSemanticEvent.toMap', () {
-    expect(
-      const FocusSemanticEvent().toMap(),
-      <String, dynamic>{
-        'type': 'focus',
-        'data': <String, dynamic>{},
-      },
-    );
-  });
 }
 
 class TestSemanticsEvent extends SemanticsEvent {

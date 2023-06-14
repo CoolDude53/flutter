@@ -36,8 +36,6 @@ import 'devfs.dart';
 import 'device.dart';
 import 'features.dart';
 import 'globals.dart' as globals;
-import 'ios/application_package.dart';
-import 'ios/devices.dart';
 import 'project.dart';
 import 'resident_devtools_handler.dart';
 import 'run_cold.dart';
@@ -393,19 +391,11 @@ class FlutterDevice {
     return devFS!.create();
   }
 
-  Future<void> startEchoingDeviceLog(DebuggingOptions debuggingOptions) async {
+  Future<void> startEchoingDeviceLog() async {
     if (_loggingSubscription != null) {
       return;
     }
-    final Stream<String> logStream;
-    if (device is IOSDevice) {
-      logStream = (device! as IOSDevice).getLogReader(
-        app: package as IOSApp?,
-        usingCISystem: debuggingOptions.usingCISystem,
-      ).logLines;
-    } else {
-      logStream = (await device!.getLogReader(app: package)).logLines;
-    }
+    final Stream<String> logStream = (await device!.getLogReader(app: package)).logLines;
     _loggingSubscription = logStream.listen((String line) {
       if (!line.contains(globals.kVMServiceMessageRegExp)) {
         globals.printStatus(line, wrap: false);
@@ -461,7 +451,7 @@ class FlutterDevice {
       'multidex': hotRunner.multidexEnabled,
     };
 
-    await startEchoingDeviceLog(hotRunner.debuggingOptions);
+    await startEchoingDeviceLog();
 
     // Start the application.
     final Future<LaunchResult> futureResult = device!.startApp(
@@ -529,7 +519,7 @@ class FlutterDevice {
     platformArgs['trace-startup'] = coldRunner.traceStartup;
     platformArgs['multidex'] = coldRunner.multidexEnabled;
 
-    await startEchoingDeviceLog(coldRunner.debuggingOptions);
+    await startEchoingDeviceLog();
 
     final LaunchResult result = await device!.startApp(
       applicationPackage,

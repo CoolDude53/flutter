@@ -60,11 +60,9 @@ void main() {
   });
 
   testWidgets('Empty textSelectionTheme will use defaults', (WidgetTester tester) async {
-    final ThemeData theme = ThemeData();
-    final bool material3 = theme.useMaterial3;
-    final Color defaultCursorColor = material3 ? theme.colorScheme.primary : const Color(0xff2196f3);
-    final Color defaultSelectionColor = material3 ? theme.colorScheme.primary.withOpacity(0.40) : const Color(0x662196f3);
-    final Color defaultSelectionHandleColor = material3 ? theme.colorScheme.primary : const Color(0xff2196f3);
+    const Color defaultCursorColor = Color(0xff2196f3);
+    const Color defaultSelectionColor = Color(0x662196f3);
+    const Color defaultSelectionHandleColor = Color(0xff2196f3);
 
     EditableText.debugDeterministicCursor = true;
     addTearDown(() {
@@ -72,9 +70,8 @@ void main() {
     });
     // Test TextField's cursor & selection color.
     await tester.pumpWidget(
-      MaterialApp(
-        theme: theme,
-        home: const Material(
+      const MaterialApp(
+        home: Material(
           child: TextField(autofocus: true),
         ),
       ),
@@ -85,7 +82,7 @@ void main() {
     final EditableTextState editableTextState = tester.firstState(find.byType(EditableText));
     final RenderEditable renderEditable = editableTextState.renderEditable;
     expect(renderEditable.cursorColor, defaultCursorColor);
-    expect(renderEditable.selectionColor, defaultSelectionColor);
+    expect(renderEditable.selectionColor?.value, defaultSelectionColor.value);
 
     // Test the selection handle color.
     await tester.pumpWidget(

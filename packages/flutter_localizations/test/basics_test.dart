@@ -9,7 +9,6 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('Nested Localizations', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp( // Creates the outer Localizations widget.
-      theme: ThemeData(useMaterial3: true),
       home: ListView(
         children: <Widget>[
           const LocalizationTracker(key: ValueKey<String>('outer')),
@@ -21,12 +20,11 @@ void main() {
         ],
       ),
     ));
-    // Most localized aspects of the TextTheme text styles are the same for the default US local and
-    // for Chinese for Material3. The baselines for all text styles differ.
+
     final LocalizationTrackerState outerTracker = tester.state(find.byKey(const ValueKey<String>('outer'), skipOffstage: false));
-    expect(outerTracker.textBaseline, TextBaseline.alphabetic);
+    expect(outerTracker.bodySmallFontSize, 12.0);
     final LocalizationTrackerState innerTracker = tester.state(find.byKey(const ValueKey<String>('inner'), skipOffstage: false));
-    expect(innerTracker.textBaseline, TextBaseline.ideographic);
+    expect(innerTracker.bodySmallFontSize, 13.0);
   });
 
   testWidgets('Localizations is compatible with ChangeNotifier.dispose() called during didChangeDependencies', (WidgetTester tester) async {
@@ -94,11 +92,11 @@ class LocalizationTracker extends StatefulWidget {
 }
 
 class LocalizationTrackerState extends State<LocalizationTracker> {
-  late TextBaseline textBaseline;
+  late double bodySmallFontSize;
 
   @override
   Widget build(BuildContext context) {
-    textBaseline = Theme.of(context).textTheme.bodySmall!.textBaseline!;
+    bodySmallFontSize = Theme.of(context).textTheme.bodySmall!.fontSize!;
     return Container();
   }
 }

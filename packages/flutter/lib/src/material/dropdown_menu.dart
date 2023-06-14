@@ -614,7 +614,7 @@ class _DropdownMenuState<T> extends State<DropdownMenu<T>> {
                     suffixIcon: trailingButton,
                   ).applyDefaults(effectiveInputDecorationTheme)
                 ),
-                for (final Widget c in _initialMenu!) c,
+                for (Widget c in _initialMenu!) c,
                 trailingButton,
                 leadingButton,
               ],

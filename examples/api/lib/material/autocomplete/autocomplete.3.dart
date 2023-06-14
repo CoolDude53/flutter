@@ -24,14 +24,8 @@ class AutocompleteExampleApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Autocomplete - async and debouncing'),
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Type below to autocomplete the following possible results: ${_FakeAPI._kOptions}.'),
-              const _AsyncAutocomplete(),
-            ],
-          ),
+        body: const Center(
+          child: _AsyncAutocomplete(),
         ),
       ),
     );
@@ -65,6 +59,7 @@ class _AsyncAutocompleteState extends State<_AsyncAutocomplete > {
 
     // If another search happened after this one, throw away these options.
     if (_currentQuery != query) {
+      _currentQuery = null;
       return null;
     }
     _currentQuery = null;
